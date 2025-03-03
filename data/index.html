@@ -29,15 +29,97 @@
             <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(2)">CAM3</a></span>
             <span class="camSelectSeparator">|</span>
             <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(3)">CAM4</a></span>
-
         </div>
+        <div class="flexContainerH" id="cameraControlExpandedHeadContainer">
+            <h2 id="cameraName">CAMERA NAME</h2>
+            <div id="formatDisplay">
+                <span id="formatCodec">CODEC</span>
+                <span id="formatResolution">RESOLUTION</span>
+                <span id="formatFPS">FPS</span>
+            </div>
+            <div id="transportControls">
+                <!-- These will be sticky buttons for loop, single clip, record -->
+                <button class="circleButton" onclick="loopHandler('Loop')" title="Loop" id="loopButton">&#8635</button>
+                <button class="circleButton" onclick="loopHandler('Single Clip')" title="Single Clip" id="singleClipButton">S</button>
+                <button class="circleButton" onclick="cameras[ci].seek(false)" title="Back">&#9204</button>
+                <button class="circleButton" onclick="cameras[ci].seek(true)" title="Forward">&#9205</button>
+                <button class="circleButton" onclick="cameras[ci].toggleRecord()" title="Record" style="color: red;">&#9210</button>
+                <button class="circleButton" onclick="cameras[ci].play()" title="Play">&#9654</button>
+                <button class="circleButton" onclick="cameras[ci].stop()" title="Stop">&#9209</button>
+            </div>
+            <h2 id="timecodeLabel">TIMECODE</h2>
+        </div>        
 
         <!-- Camera Controls Box -->
         <div class="flexContainerH" id="allCamerasContainer">
             <div class="flexContainerV" id="cameraControlsContainer">
                 <div class="flexContainerH" id="cameraControlHeadContainer">
-                    <h2 id="cameraNumberLabel">FRONT</h2>
+                    <h2 id="cameraNumberLabel">LEFT</h2>
                 </div>
+        <div class="flexContainerH" id="cameraControlExpandedBodyContainer">
+            <input type="text" placeholder=" IP " id="hostnameInputLEFT" onclick="hostnameInputHandler()" onkeydown="tHandler()" style=";">
+            <button onclick="initCamera(1)">Connect</button>
+            <span id="connectionErrorSpan"></span>
+        </div>
+
+                <div class="flexContainerH" id="cameraControlExposureContainer">
+     
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">GAIN</span>
+                        <div class="ccExposureSettingValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseGain(1)" id="GAL">&#9664</a>
+                            <span id="gainSpan" contenteditable="plaintext-only" onkeydown="GainInputHandler()" onmousedown="GainInputHandler()">+0db</span>
+                            <a class="expAdjArr" href="#" onclick="increaseGain(1)" id="GAR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">SHUTTER</span>
+                        <div class="ccExposureSettingValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseShutter(1)" id="SHL">&#9664</a>
+                            <span id="shutterSpan" contenteditable="plaintext-only" onkeydown="handleShutterInput()" onmousedown="handleShutterInput()">1/50</span>
+                            <a class="expAdjArr" href="#" onclick="increaseShutter(1)" id="SHR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel" onclick="swapWBMode(1)" title="Click here to swap between WB and Tint" id="WBLabel">BALANCE</span>
+                        <div class="ccExposureSettingValueContainer" id="WBValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalance(1)" id="WBL">&#9664</a>
+                            <span id="whiteBalanceSpan" contenteditable="plaintext-only" onkeydown="WBInputHandler()" onmousedown="WBInputHandler()">5600K</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalance(1)" id="WBR">&#9654</a>
+                        </div>
+                        <div class="ccExposureSettingValueContainer dNone" id="WBTintValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalanceTint(1)" id="WBTL">&#9664</a>
+                            <span id="whiteBalanceTintSpan" contenteditable="plaintext-only" onkeydown="WBTInputHandler()" onmousedown="WBTInputHandler()">0</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalanceTint(1)" id="WBLR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <button id="AWBButton" class="circleButton" title="Make the camera do an Auto Whitebalance" onclick="cameras[1].doAutoWhitebalance()">AW</button>
+                    </div>
+                </div>
+
+                <div class="flexContainerH" id="cameraControlLensContainer">
+                    <div class="lensSliderContainer">
+                        <span>FOCUS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" id="focusRange" oninput="cameras[1].PUTdata('/lens/focus', {normalised: parseFloat(this.value)})">
+                        <button id="AFButton" class="circleButton" onclick="cameras[1].doAutoFocus()">AF</button>
+                    </div>
+                    <div class="lensSliderContainer">
+                        <span>IRIS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" id="irisRange" oninput="cameras[1].PUTdata('/lens/iris', {normalised: parseFloat(this.value)})">
+                        <span id="apertureStopsLabel">X.X</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flexContainerV" id="cameraControlsContainer">
+                <div class="flexContainerH" id="cameraControlHeadContainer">
+                    <h2 id="cameraNumberLabel">REAR</h2>
+                </div>
+            <div class="flexContainerH" id="cameraControlExpandedBodyContainer">
+                <input type="text" placeholder=" IP " id="hostnameInput" onclick="hostnameInputHandler()" onkeydown="tHandler()" style=";">
+                <button onclick="initCamera()">Connect</button>
+                <span id="connectionErrorSpan"></span>
+            </div>
 
                 
 
@@ -89,72 +171,129 @@
                         <span id="apertureStopsLabel">X.X</span>
                     </div>
                 </div>
+            </div>			
+            <div class="flexContainerV" id="cameraControlsContainer">
+                <div class="flexContainerH" id="cameraControlHeadContainer">
+                    <h2 id="cameraNumberLabel">RIGHT</h2>
+                </div>
+           <div class="flexContainerH" id="cameraControlExpandedBodyContainer">
+                <input type="text" placeholder=" IP " id="hostnameInput" onclick="hostnameInputHandler()" onkeydown="tHandler()" style=";">
+                <button onclick="initCamera()">Connect</button>
+                <span id="connectionErrorSpan"></span>
             </div>
-			
-	
-			
-            <div class="flexContainerV" id="cameraControlsContainerExpanded">
-                    <div class="flexContainerH" id="cameraControlExpandedHeadContainer">
-                        <h2 id="cameraName">CAMERA NAME</h2>
-                        <div id="formatDisplay">
-                            <span id="formatCodec">CODEC</span>
-                            <span id="formatResolution">RESOLUTION</span>
-                            <span id="formatFPS">FPS</span>
-                        </div>
-                        <div id="transportControls">
-                            <!-- These will be sticky buttons for loop, single clip, record -->
-                            <button class="circleButton" onclick="loopHandler('Loop')" title="Loop" id="loopButton">&#8635</button>
-                            <button class="circleButton" onclick="loopHandler('Single Clip')" title="Single Clip" id="singleClipButton">S</button>
-                            <button class="circleButton" onclick="cameras[ci].seek(false)" title="Back">&#9204</button>
-                            <button class="circleButton" onclick="cameras[ci].seek(true)" title="Forward">&#9205</button>
-                            <button class="circleButton" onclick="cameras[ci].toggleRecord()" title="Record" style="color: red;">&#9210</button>
-                            <button class="circleButton" onclick="cameras[ci].play()" title="Play">&#9654</button>
-                            <button class="circleButton" onclick="cameras[ci].stop()" title="Stop">&#9209</button>
-                        </div>
-                        <h2 id="timecodeLabel">TIMECODE</h2>
-                    </div>
 
-                    <div class="flexContainerV" id="cameraControlExpandedBodyContainer">
-                        <div class="tableControl">
-                            <h3>Connection</h3>
-                            <table>
-                                <tr>
-                                    <td>Hostname</td>
-                                    <td>
-                                        <input type="text" placeholder=" Camera-Name-Here.local" id="hostnameInput" onclick="hostnameInputHandler()" onkeydown="hostnameInputHandler()" style="text-align: left;">
-                                        <button onclick="initCamera()">Connect</button>
-                                        <span id="connectionErrorSpan"></span>
-                                    </td>
-                                </tr>
-                               
-                            </table>
-                        </div>
-                        
-                        <div class="tableControl">
-                            <h3>Presets</h3>
-                            <table>
-                                <tr>
-                                    <td>Preset Select</td>
-                                    <td>
-                                        <select id="presetsDropDown" onmousedown="unsavedChanges.push('presets')" onchange="presetInputHandler()">
-                                            <!-- Auto-populated by updateUIPresets() -->
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button onclick="presetInputHandler()">Restore from Preset</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        
+                
 
-                        
-                        
-                        
-                       
+                <div class="flexContainerH" id="cameraControlExposureContainer">
+     
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">GAIN</span>
+                        <div class="ccExposureSettingValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseGain()" id="GAL">&#9664</a>
+                            <span id="gainSpan" contenteditable="plaintext-only" onkeydown="GainInputHandler()" onmousedown="GainInputHandler()">+0db</span>
+                            <a class="expAdjArr" href="#" onclick="increaseGain()" id="GAR">&#9654</a>
+                        </div>
                     </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">SHUTTER</span>
+                        <div class="ccExposureSettingValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseShutter()" id="SHL">&#9664</a>
+                            <span id="shutterSpan" contenteditable="plaintext-only" onkeydown="handleShutterInput()" onmousedown="handleShutterInput()">1/50</span>
+                            <a class="expAdjArr" href="#" onclick="increaseShutter()" id="SHR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel" onclick="swapWBMode()" title="Click here to swap between WB and Tint" id="WBLabel">BALANCE</span>
+                        <div class="ccExposureSettingValueContainer" id="WBValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalance()" id="WBL">&#9664</a>
+                            <span id="whiteBalanceSpan" contenteditable="plaintext-only" onkeydown="WBInputHandler()" onmousedown="WBInputHandler()">5600K</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalance()" id="WBR">&#9654</a>
+                        </div>
+                        <div class="ccExposureSettingValueContainer dNone" id="WBTintValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalanceTint()" id="WBTL">&#9664</a>
+                            <span id="whiteBalanceTintSpan" contenteditable="plaintext-only" onkeydown="WBTInputHandler()" onmousedown="WBTInputHandler()">0</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalanceTint()" id="WBLR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <button id="AWBButton" class="circleButton" title="Make the camera do an Auto Whitebalance" onclick="cameras[ci].doAutoWhitebalance()">AW</button>
+                    </div>
+                </div>
+
+                <div class="flexContainerH" id="cameraControlLensContainer">
+                    <div class="lensSliderContainer">
+                        <span>FOCUS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" id="focusRange" oninput="cameras[ci].PUTdata('/lens/focus', {normalised: parseFloat(this.value)})">
+                        <button id="AFButton" class="circleButton" onclick="cameras[ci].doAutoFocus()">AF</button>
+                    </div>
+                    <div class="lensSliderContainer">
+                        <span>IRIS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" id="irisRange" oninput="cameras[ci].PUTdata('/lens/iris', {normalised: parseFloat(this.value)})">
+                        <span id="apertureStopsLabel">X.X</span>
+                    </div>
+                </div>
+            </div>  	
+            <div class="flexContainerV" id="cameraControlsContainer">
+                <div class="flexContainerH" id="cameraControlHeadContainer">
+                    <h2 id="cameraNumberLabel">FRONT</h2>
+                </div>
+            <div class="flexContainerH" id="cameraControlExpandedBodyContainer">
+                <input type="text" placeholder=" IP " id="hostnameInput" onclick="hostnameInputHandler()" onkeydown="tHandler()" style=";">
+                <button onclick="initCamera()">Connect</button>
+                <span id="connectionErrorSpan"></span>
             </div>
-            
+
+                
+
+                <div class="flexContainerH" id="cameraControlExposureContainer">
+     
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">GAIN</span>
+                        <div class="ccExposureSettingValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseGain()" id="GAL">&#9664</a>
+                            <span id="gainSpan" contenteditable="plaintext-only" onkeydown="GainInputHandler()" onmousedown="GainInputHandler()">+0db</span>
+                            <a class="expAdjArr" href="#" onclick="increaseGain()" id="GAR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel">SHUTTER</span>
+                        <div class="ccExposureSettingValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseShutter()" id="SHL">&#9664</a>
+                            <span id="shutterSpan" contenteditable="plaintext-only" onkeydown="handleShutterInput()" onmousedown="handleShutterInput()">1/50</span>
+                            <a class="expAdjArr" href="#" onclick="increaseShutter()" id="SHR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <span class="exposureControlLabel" onclick="swapWBMode()" title="Click here to swap between WB and Tint" id="WBLabel">BALANCE</span>
+                        <div class="ccExposureSettingValueContainer" id="WBValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalance()" id="WBL">&#9664</a>
+                            <span id="whiteBalanceSpan" contenteditable="plaintext-only" onkeydown="WBInputHandler()" onmousedown="WBInputHandler()">5600K</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalance()" id="WBR">&#9654</a>
+                        </div>
+                        <div class="ccExposureSettingValueContainer dNone" id="WBTintValueContainer">
+                            <a class="expAdjArr" href="#" onclick="decreaseWhiteBalanceTint()" id="WBTL">&#9664</a>
+                            <span id="whiteBalanceTintSpan" contenteditable="plaintext-only" onkeydown="WBTInputHandler()" onmousedown="WBTInputHandler()">0</span>
+                            <a class="expAdjArr" href="#" onclick="increaseWhiteBalanceTint()" id="WBLR">&#9654</a>
+                        </div>
+                    </div>
+                    <div class="ccExposureSettingContainer">
+                        <button id="AWBButton" class="circleButton" title="Make the camera do an Auto Whitebalance" onclick="cameras[ci].doAutoWhitebalance()">AW</button>
+                    </div>
+                </div>
+
+                <div class="flexContainerH" id="cameraControlLensContainer">
+                    <div class="lensSliderContainer">
+                        <span>FOCUS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" id="focusRange" oninput="cameras[ci].PUTdata('/lens/focus', {normalised: parseFloat(this.value)})">
+                        <button id="AFButton" class="circleButton" onclick="cameras[ci].doAutoFocus()">AF</button>
+                    </div>
+                    <div class="lensSliderContainer">
+                        <span>IRIS</span>
+                        <input type="range" orient="vertical" max="1" min="0" step="0.001" id="irisRange" oninput="cameras[ci].PUTdata('/lens/iris', {normalised: parseFloat(this.value)})">
+                        <span id="apertureStopsLabel">X.X</span>
+                    </div>
+                </div>
+            </div>  
         </div>
 
         <!-- Footer Div -->

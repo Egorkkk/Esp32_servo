@@ -248,7 +248,7 @@ input[type=file]:focus {
 
 /* Camera Controls Container */
 #cameraControlsContainer {
-    width: 15vw;
+    width: 25vw;
     height: 100%;
     background: #282828;
     flex-direction: column;
@@ -267,6 +267,7 @@ input[type=file]:focus {
     border-bottom: 2px solid black;
     align-items: center;
     color: white;
+    justify-content: center;
 }
 
 h2 {
@@ -425,14 +426,16 @@ h2 {
     height: 5vh;
     border-bottom: 2px solid black;
     align-items: center;
-    justify-content:  start;
+    justify-content:  center;
 }
 
+
 #cameraControlExpandedBodyContainer {
-    flex-direction: column;
+    flex-direction: row;
     display: inline-flex;
-    height: inherit;
-    justify-content: space-around;
+    height: 5vh;
+    justify-content: center;
+    align-items: center;
 }
 
 #timecodeLabel {
