@@ -19,7 +19,7 @@
 
 @media screen and (max-width: 1400px) and (orientation: landscape) {
     #cameraControlsContainer {
-        width: 30vw!important;
+        width: 25vw!important;
     }
 
     #headerContainer {

@@ -89,7 +89,7 @@ function updateUIAll() {
         document.getElementById("cameraControlHeadContainer").classList.remove("liveCam");
         document.getElementById("cameraControlExpandedHeadContainer").classList.remove("liveCam");
     }
-
+/*
     // ========== Playback Loop State ==========
     let loopState = cameras[ci].propertyData['/transports/0/playback']?.loop;
     let singleClipState = cameras[ci].propertyData['/transports/0/playback']?.singleClip;
@@ -108,7 +108,7 @@ function updateUIAll() {
     } else {
         singleClipButton.classList.remove("activated");
     }
-
+*/
     // ========== Timecode ==========
 
     document.getElementById("timecodeLabel").innerHTML = parseTimecode(cameras[ci].propertyData['/transports/0/timecode']?.timecode);
@@ -226,7 +226,7 @@ function switchCamera(index) {
 
     // Update the UI
 
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 4; i++) {
         if (i == ci) {
             document.getElementsByClassName("cameraSwitchLabel")[i].classList.add("selectedCam");
         } else {

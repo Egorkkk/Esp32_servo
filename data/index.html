@@ -30,31 +30,37 @@
         <!-- Camera Select Bar -->
 
         <div class="flexContainerH" id="cameraSelectContainer">
-            <span class="cameraSwitchLabel selectedCam"><a href="#" onclick="switchCamera(0)">CAM1</a></span>
+            <span class="cameraSwitchLabel selectedCam"><a href="#" onclick="switchCamera(0)">LEFT</a></span>
             <span class="camSelectSeparator">|</span>
-            <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(1)">CAM2</a></span>
+            <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(1)">REAR</a></span>
             <span class="camSelectSeparator">|</span>
-            <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(2)">CAM3</a></span>
+            <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(2)">RIGHT</a></span>
             <span class="camSelectSeparator">|</span>
-            <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(3)">CAM4</a></span>
+            <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(3)">FRONT</a></span>
         </div>
 
         <div class="flexContainerH" id="cameraControlExpandedHeadContainer">
             <h2 id="cameraName">CAMERA NAME</h2>
+            <!--
             <div id="formatDisplay">
                 <span id="formatCodec">CODEC</span>
                 <span id="formatResolution">RESOLUTION</span>
                 <span id="formatFPS">FPS</span>
             </div>
+            -->
             <div id="transportControls">
                 <!-- These will be sticky buttons for loop, single clip, record -->
+
                 <button class="circleButton" onclick="loopHandler('Loop')" title="Loop" id="loopButton">&#8635</button>
                 <button class="circleButton" onclick="loopHandler('Single Clip')" title="Single Clip" id="singleClipButton">S</button>
                 <button class="circleButton" onclick="cameras[ci].seek(false)" title="Back">&#9204</button>
                 <button class="circleButton" onclick="cameras[ci].seek(true)" title="Forward">&#9205</button>
-                <button class="circleButton" onclick="cameras[ci].toggleRecord()" title="Record" style="color: red;">&#9210</button>
                 <button class="circleButton" onclick="cameras[ci].play()" title="Play">&#9654</button>
+
+                <button class="circleButton" onclick="cameras[ci].toggleRecord()" title="Record" style="color: red;">&#9210</button>
                 <button class="circleButton" onclick="cameras[ci].stop()" title="Stop">&#9209</button>
+                <input type="checkbox" id="simRecord"/>
+                <span id="simRecordSpan">All Cameras</span>
             </div>
             <h2 id="timecodeLabel">TIMECODE</h2>
         </div>        
@@ -64,10 +70,15 @@
         <div class="flexContainerV" id="cameraControlsContainer">
                 <div class="flexContainerH" id="cameraControlHeadContainer">
                     <h2 id="cameraNumberLabel">LEFT</h2>
+                <div id="formatDisplay">
+                    <span id="formatCodec">CODEC</span>
+                    <span id="formatResolution">RESOLUTION</span>
+                    <span id="formatFPS">FPS</span>
+                </div>                    
                 </div>
                     <div class="flexContainerH" id="cameraControlExpandedBodyContainer">
                         <input type="text" placeholder=" IP " id="hostnameInputLEFT" onclick="hostnameInputHandler(0, 'hostnameInputLEFT')" onkeydown="hostnameInputHandler(0, 'hostnameInputLEFT')">
-                        <button onclick="if(confirm('Are you sure?')) initCamera(0, 'hostnameInputLEFT')" id="buttonLEFT">Connect</button>
+                        <button onclick="initCamera(0, 'hostnameInputLEFT')" id="buttonLEFT">Connect</button>
                         <span id="connectionErrorSpan"></span>
                     </div>
                 <div class="flexContainerH" id="cameraControlExposureContainer">
