@@ -16,6 +16,8 @@ var defaultControlsHTML;
 
 var unsavedChanges = [];
 
+var isCamConnected = [];
+
 // Set everything up
 function bodyOnLoad() {
     defaultControlsHTML = document.getElementById("allCamerasContainer").innerHTML;
@@ -23,10 +25,10 @@ function bodyOnLoad() {
 
 // Checks the hostname, if it replies successfully then a new BMCamera object
 //  is made and gets put in the array at ind
-function initCamera() {
+function initCamera(cam_num, ipInput) {
     // Get hostname from Hostname text field
-    let hostname = document.getElementById("hostnameInput").value;
-    let security = document.getElementById("secureCheckbox").checked;
+    let hostname = document.getElementById(ipInput).value;
+    let security = 0;// document.getElementById("secureCheckbox").checked;
 
     try {
         // Check if the hostname is valid
@@ -34,14 +36,15 @@ function initCamera() {
 
         if (response.status < 300) {
             // Success, make a new camera, get all relevant info, and populate the UI
-            cameras[ci] = new BMCamera(hostname, security);
+            cameras[cam_num] = new BMCamera(hostname, security);
 
-            cameras[ci].updateUI = updateUIAll;
+            cameras[cam_num].updateUI = updateUIAll;
 
-            cameras[ci].active = true;
+            cameras[cam_num].active = true;
 
-            document.getElementById("connectionErrorSpan").innerHTML = "Connected.";
+            document.getElementById("connectionErrorSpan").innerHTML = "Connected";
             document.getElementById("connectionErrorSpan").setAttribute("style","color: #6e6e6e;");
+            document.getElementById("buttonLEFT").innerHTML = "Reconnect";
         } else {
             // Something has gone wrong, tell the user
             document.getElementById("connectionErrorSpan").innerHTML = response.statusText;
@@ -86,7 +89,7 @@ function updateUIAll() {
         document.getElementById("cameraControlHeadContainer").classList.remove("liveCam");
         document.getElementById("cameraControlExpandedHeadContainer").classList.remove("liveCam");
     }
-
+/*
     // ========== Playback Loop State ==========
     let loopState = cameras[ci].propertyData['/transports/0/playback']?.loop;
     let singleClipState = cameras[ci].propertyData['/transports/0/playback']?.singleClip;
@@ -105,13 +108,13 @@ function updateUIAll() {
     } else {
         singleClipButton.classList.remove("activated");
     }
-
+*/
     // ========== Timecode ==========
 
     document.getElementById("timecodeLabel").innerHTML = parseTimecode(cameras[ci].propertyData['/transports/0/timecode']?.timecode);
 
     // ========== Presets Dropdown ==========
-
+/*
     if (!unsavedChanges.includes("presets")) {
     
         var presetsList = document.getElementById("presetsDropDown");
@@ -141,26 +144,21 @@ function updateUIAll() {
         })
 
     }
-
+*/
     // ========== Iris ==========
 
     document.getElementById("irisRange").value = cameras[ci].propertyData['/lens/iris']?.normalised;
     document.getElementById("apertureStopsLabel").innerHTML = cameras[ci].propertyData['/lens/iris']?.apertureStop.toFixed(1);
 
     // ========== Zoom ==========
-
+/*
     document.getElementById("zoomRange").value = cameras[ci].propertyData['/lens/zoom']?.normalised;
     document.getElementById("zoomMMLabel").innerHTML = cameras[ci].propertyData['/lens/zoom']?.focalLength +"mm";
-
+*/
     // ========== Focus ==========
 
     document.getElementById("focusRange").value = cameras[ci].propertyData['/lens/focus']?.normalised;
 
-    // ========== ISO ==========
-    if (!unsavedChanges.includes("ISO")) {
-        if (cameras[ci].propertyData['/video/iso'])
-            document.getElementById("ISOInput").value = cameras[ci].propertyData['/video/iso']?.iso;
-    }
 
     // ========== GAIN ==========
 
@@ -175,6 +173,7 @@ function updateUIAll() {
         }
 
         document.getElementById("gainSpan").innerHTML = gainString;
+        document.getElementById("isoSpan").innerHTML = cameras[ci].propertyData['/video/iso']?.iso;
     }
 
     // ========== WHITE BALANCE ===========
@@ -183,20 +182,6 @@ function updateUIAll() {
         document.getElementById("whiteBalanceSpan").innerHTML = cameras[ci].propertyData['/video/whiteBalance']?.whiteBalance+"K";
     }
     
-    if (!unsavedChanges.includes("WBT")) {
-        document.getElementById("whiteBalanceTintSpan").innerHTML = cameras[ci].propertyData['/video/whiteBalanceTint']?.whiteBalanceTint;
-    }
-
-    // =========== ND =============
-
-    if (!unsavedChanges.includes("ND")) {
-        if (cameras[ci].propertyData['/video/ndFilter']) {
-            document.getElementById("ndFilterSpan").innerHTML = cameras[ci].propertyData['/video/ndFilter']?.stop;
-        } else {
-            document.getElementById("ndFilterSpan").innerHTML = 0;
-            document.getElementById("ndFilterSpan").disabled = true;
-        }
-    }
 
     // ============ Shutter =====================
 
@@ -218,80 +203,11 @@ function updateUIAll() {
         document.getElementById("shutterSpan").innerHTML = shutterString;
     }
 
-    // =========== Auto Exposure Mode ===========
 
-    if (!unsavedChanges.includes("AutoExposure")) {
-        let AEmodeSelect = document.getElementById("AEmodeDropDown");
-        let AEtypeSelect = document.getElementById("AEtypeDropDown");
-
-        AEmodeSelect.value = cameras[ci].propertyData['/video/autoExposure']?.mode;
-        AEtypeSelect.value = cameras[ci].propertyData['/video/autoExposure']?.type;
-    }
-
-    // =========== COLOR CORRECTION =============
-
-    // Lift
-    if (!unsavedChanges.includes("CC0")) {
-        let liftProps = cameras[ci].propertyData['/colorCorrection/lift'];
-        document.getElementsByClassName("CClumaLabel")[0].innerHTML = liftProps?.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[0].innerHTML = liftProps?.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[0].innerHTML = liftProps?.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[0].innerHTML = liftProps?.blue.toFixed(2);
-    }
-
-    // Gamma
-    if (!unsavedChanges.includes("CC1")) {
-        let gammaProps = cameras[ci].propertyData['/colorCorrection/gamma'];
-        document.getElementsByClassName("CClumaLabel")[1].innerHTML = gammaProps?.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[1].innerHTML = gammaProps?.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[1].innerHTML = gammaProps?.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[1].innerHTML = gammaProps?.blue.toFixed(2);
-    }
-
-    // Gain
-    if (!unsavedChanges.includes("CC2")) {
-        let gainProps = cameras[ci].propertyData['/colorCorrection/gain'];
-        document.getElementsByClassName("CClumaLabel")[2].innerHTML = gainProps?.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[2].innerHTML = gainProps?.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[2].innerHTML = gainProps?.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[2].innerHTML = gainProps?.blue.toFixed(2);
-    }
-
-    // Offset
-    if (!unsavedChanges.includes("CC3")) {
-        let offsetProps = cameras[ci].propertyData['/colorCorrection/offset'];
-        document.getElementsByClassName("CClumaLabel")[3].innerHTML = offsetProps?.luma.toFixed(2);
-        document.getElementsByClassName("CCredLabel")[3].innerHTML = offsetProps?.red.toFixed(2);
-        document.getElementsByClassName("CCgreenLabel")[3].innerHTML = offsetProps?.green.toFixed(2);
-        document.getElementsByClassName("CCblueLabel")[3].innerHTML = offsetProps?.blue.toFixed(2);
-    }
-
-    // Contrast
-    if (!unsavedChanges.includes("CC4")) {
-        let constrastProps = cameras[ci].propertyData['/colorCorrection/contrast'];
-        document.getElementById("CCcontrastPivotRange").value = constrastProps?.pivot;
-        document.getElementById("CCcontrastPivotLabel").innerHTML = constrastProps?.pivot.toFixed(2);
-        document.getElementById("CCcontrastAdjustRange").value = constrastProps?.adjust;
-        document.getElementById("CCcontrastAdjustLabel").innerHTML = parseInt(constrastProps?.adjust * 50)+"%";
-    }
-    
-    // Color
-    if (!unsavedChanges.includes("CC5")) {
-        let colorProps = cameras[ci].propertyData['/colorCorrection/color'];
-        document.getElementById("CChueRange").value = colorProps?.hue;
-        document.getElementById("CCcolorHueLabel").innerHTML = parseInt((colorProps?.hue + 1) * 180)+"°";
-        
-        document.getElementById("CCsaturationRange").value = colorProps?.saturation;
-        document.getElementById("CCcolorSatLabel").innerHTML = parseInt(colorProps?.saturation * 50)+"%";
-
-        let lumaContributionProps = cameras[ci].propertyData['/colorCorrection/lumaContribution'];
-        document.getElementById("CClumaContributionRange").value = lumaContributionProps?.lumaContribution;
-        document.getElementById("CCcolorLCLabel").innerHTML = parseInt(lumaContributionProps?.lumaContribution * 100)+"%";
-    }
-
+ 
     // ============ Footer Links ===============
-    document.getElementById("documentationLink").href = (cameras[ci].useHTTPS ? "https://" : "http://")+cameras[ci].hostname+"/control/documentation.html";
-    document.getElementById("mediaManagerLink").href = (cameras[ci].useHTTPS ? "https://" : "http://")+cameras[ci].hostname;
+    //document.getElementById("documentationLink").href = (cameras[ci].useHTTPS ? "https://" : "http://")+cameras[ci].hostname+"/control/documentation.html";
+    //document.getElementById("mediaManagerLink").href = (cameras[ci].useHTTPS ? "https://" : "http://")+cameras[ci].hostname;
 }
 
 
@@ -310,7 +226,7 @@ function switchCamera(index) {
 
     // Update the UI
 
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 4; i++) {
         if (i == ci) {
             document.getElementsByClassName("cameraSwitchLabel")[i].classList.add("selectedCam");
         } else {
@@ -399,13 +315,17 @@ function increaseND() {
     cameras[ci].PUTdata("/video/ndFilter",{stop: cameras[ci].propertyData['/video/ndFilter'].stop+2});
 }
 
-function decreaseGain() {
-    cameras[ci].PUTdata("/video/gain",{gain: cameras[ci].propertyData['/video/gain'].gain-2});
+function decreaseGain(cam_num) {
+    cameras[cam_num].PUTdata("/video/gain",{gain: cameras[cam_num].propertyData['/video/gain'].gain-2});
 }
 
-function increaseGain() {
-    cameras[ci].PUTdata("/video/gain",{gain: cameras[ci].propertyData['/video/gain'].gain+2});
+function increaseGain(cam_num) {
+    cameras[cam_num].PUTdata("/video/gain",{gain: cameras[cam_num].propertyData['/video/gain'].gain+2});
 }
+
+
+
+
 
 function decreaseShutter() {
     let cam = cameras[ci];
@@ -474,13 +394,13 @@ function presetInputHandler() {
     unsavedChanges = unsavedChanges.filter((e) => {return e !== "presets"});
 }
 
-function hostnameInputHandler() {
+function hostnameInputHandler(cam_num) {
     let newHostname = document.getElementById("hostnameInput").value;
 
     if (event.key === 'Enter') {
         event.preventDefault;
         unsavedChanges = unsavedChanges.filter((e) => {return e !== "Hostname"});
-        initCamera();
+        initCamera(cam_num);
     } else {
         unsavedChanges.push('Hostname');
     }
@@ -500,7 +420,8 @@ function ISOInputHandler() {
 
     if (event.key === 'Enter') {
         event.preventDefault;
-        cameras[ci].PUTdata("/video/iso", {iso: parseInt(ISOInput.value)})
+        cameras[ci].PUTdata("/video/iso", {iso: parseInt(document.getElementById("isoSpan").innerHTML)})
+        //cameras[ci].PUTdata("/video/iso", {iso: parseInt(ISOInput.value)})
         unsavedChanges = unsavedChanges.filter((e) => {return e !== "ISO"});
     } else {
         unsavedChanges.push('ISO');
@@ -536,6 +457,9 @@ function GainInputHandler() {
         unsavedChanges.push('Gain');
     }
 }
+
+
+
 
 function WBInputHandler() {
     if (event.key === 'Enter') {
@@ -641,3 +565,27 @@ function parseTimecode(timecodeBCD) {
     let finalTCString = decimalTCString.match(/.{1,2}/g).join(':');         // Put colons between every two characters
     return finalTCString;
 }
+
+
+function openTab(evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+

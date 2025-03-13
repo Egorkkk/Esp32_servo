@@ -19,7 +19,7 @@
 
 @media screen and (max-width: 1400px) and (orientation: landscape) {
     #cameraControlsContainer {
-        width: 30vw!important;
+        width: 25vw!important;
     }
 
     #headerContainer {
@@ -66,7 +66,7 @@ input[type=text] {
     border-radius: 0.5vh;
     background: rgb(30, 30, 30);
     color: white;
-    height: 2em;
+    height: 3em;
     width: 10vw;
     border: 1px solid rgb(20, 20, 20);
     text-align: center;
@@ -83,7 +83,7 @@ input[type=number] {
     border-radius: 0.5vh;
     background: rgb(30, 30, 30);
     color: white;
-    height: 2em;
+    height: 3em;
     width: 4.666vw;
     border: 1px solid rgb(20, 20, 20);
     text-align: center;
@@ -166,11 +166,22 @@ input[type=file]:focus {
     font-weight: 100;
 }
 
+#tabSelectContainer {
+    background: #222222;
+    border: 1px solid black;
+    width: 100%;
+    height: 4vh;
+    color: #474747;
+    font-size: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
 #cameraSelectContainer {
     background: #222222;
     border: 1px solid black;
     width: 100%;
-    height: 3.53vh;
+    height: 4vh;
     color: #474747;
     font-size: 1em;
     align-items: center;
@@ -248,7 +259,7 @@ input[type=file]:focus {
 
 /* Camera Controls Container */
 #cameraControlsContainer {
-    width: 15vw;
+    width: 25vw;
     height: 100%;
     background: #282828;
     flex-direction: column;
@@ -267,6 +278,7 @@ input[type=file]:focus {
     border-bottom: 2px solid black;
     align-items: center;
     color: white;
+    justify-content: center;
 }
 
 h2 {
@@ -314,7 +326,7 @@ h2 {
 
 .ccExposureSettingValueContainer .expAdjArr {
     text-decoration: none;
-    color: #60606000;
+    color: #606060ff;
 }
 
 .ccExposureSettingValueContainer:hover .expAdjArr {
@@ -353,7 +365,7 @@ h2 {
     border-bottom: 1px solid #2d2d2d;
     display: inline-flex;
     justify-content: space-evenly;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .ccExposureSettingContainer {
@@ -377,7 +389,7 @@ h2 {
 /* Lens Stuff */
 #cameraControlLensContainer {
     width: 100%;
-    height: 100vh;
+    height: 80vh;
     border-bottom: 1px solid black;
     justify-content: space-evenly;
 }
@@ -425,14 +437,16 @@ h2 {
     height: 5vh;
     border-bottom: 2px solid black;
     align-items: center;
-    justify-content:  start;
+    justify-content:  center;
 }
 
+
 #cameraControlExpandedBodyContainer {
-    flex-direction: column;
+    flex-direction: row;
     display: inline-flex;
-    height: inherit;
-    justify-content: space-around;
+    height: 5vh;
+    justify-content: center;
+    align-items: center;
 }
 
 #timecodeLabel {
@@ -468,3 +482,13 @@ table, td {
 td, tr {
     align-items: center;
 }
+
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+

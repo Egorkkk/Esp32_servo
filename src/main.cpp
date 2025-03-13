@@ -9,8 +9,8 @@ static AsyncWebServer server(80);
 
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-const char* ssid = "Lookfilm _B7";
-const char* password = "lookfilm";
+const char* ssid = "Robocast2.4G";
+const char* password = "1357924680";
 IPAddress local_IP(192, 168, 0, 200);
 // Set your Gateway IP address
 IPAddress gateway(192, 168, 0, 1);
