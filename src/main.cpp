@@ -174,22 +174,6 @@ void setup() {
   Serial.begin(115200);
 
 
-//////////////////////////////////////////////////////////////////////////////////OLED//////////////////////
-  if(!display.begin(SSD1306_SWITCHCAPVCC)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
-  }
-
-  display.display();
-  delay(2000);
-  display.clearDisplay();
-  testdrawchar(); 
-  delay(2000);
-  display.clearDisplay();
-  testanimate(logo_bmp, LOGO_WIDTH, LOGO_HEIGHT);
-//////////////////////////////////////////////////////////////////////////////////OLED//////////////////////
-
-
 
   //WiFi.mode(WIFI_AP);
   //WiFi.softAP("esp-captive");

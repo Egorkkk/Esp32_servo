@@ -8,6 +8,7 @@ float mx = (mx_raw - mag_offset_x) / ((mag_max_x - mag_min_x) / 2.0f); // Сме
 float my = (my_raw - mag_offset_y) / ((mag_max_y - mag_min_y) / 2.0f);
 float mz = (mz_raw - mag_offset_z) / ((mag_max_z - mag_min_z) / 2.0f);
 */
+/*
 
 // Адреса I2C устройств
 #define MPU6050_ADDR 0x68
@@ -160,3 +161,4 @@ void loop() {
     while (1); // Остановка после завершения
   }
 }
+  */
