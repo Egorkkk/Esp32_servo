@@ -6,58 +6,19 @@
 #include <ESPAsyncWebServer.h>
 
 
-//////////////////////////////////////////////////////////////////////////////////OLED//////////////////////
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
-#define OLED_MOSI   22
-#define OLED_CLK   23
-#define OLED_DC    19
-#define OLED_CS    18
-#define OLED_RESET 21
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT,
-  OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-  #define NUMFLAKES     10 // Number of snowflakes in the animation example
-
-  #define LOGO_HEIGHT   16
-  #define LOGO_WIDTH    16
-  static const unsigned char PROGMEM logo_bmp[] =
-  { 0b00000000, 0b11000000,
-    0b00000001, 0b11000000,
-    0b00000001, 0b11000000,
-    0b00000011, 0b11100000,
-    0b11110011, 0b11100000,
-    0b11111110, 0b11111000,
-    0b01111110, 0b11111111,
-    0b00110011, 0b10011111,
-    0b00011111, 0b11111100,
-    0b00001101, 0b01110000,
-    0b00011011, 0b10100000,
-    0b00111111, 0b11100000,
-    0b00111111, 0b11110000,
-    0b01111100, 0b11110000,
-    0b01110000, 0b01110000,
-    0b00000000, 0b00110000 };
-//////////////////////////////////////////////////////////////////////////////////OLED//////////////////////
-
-
-
+#include "lcdgfx.h"
+#include "lcdgfx_gui.h"
+#include "owl.h"
+DisplaySH1106_128x64_SPI display(22,{-1, 5, 21, 0,23,19});
 
 static AsyncWebServer server(80);
 
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-const char* ssid = "Robocast2.4G";
-const char* password = "1008121982";
+const char* ssid = "Lookfilm _B7";
+const char* password = "lookfilm";
 IPAddress local_IP(192, 168, 0, 200);
-// Set your Gateway IP address
 IPAddress gateway(192, 168, 0, 1);
-
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);   //optional
 IPAddress secondaryDNS(8, 8, 4, 4); //optional
@@ -93,82 +54,121 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
   }
 }
 
-void createDir(fs::FS &fs, const char * path){
-  Serial.printf("Creating Dir: %s\n", path);
-  if(fs.mkdir(path)){
-      Serial.println("Dir created");
-  } else {
-      Serial.println("mkdir failed");
-  }
+////////////////////
+const PROGMEM uint8_t heartImage[8] =
+{
+    0B00001110,
+    0B00011111,
+    0B00111111,
+    0B01111110,
+    0B01111110,
+    0B00111101,
+    0B00011001,
+    0B00001110
+};
+
+/*
+ * Define sprite width. The width can be of any size.
+ * But sprite height is always assumed to be 8 pixels
+ * (number of bits in single byte).
+ */
+const int spriteWidth = sizeof(heartImage);
+
+const char *menuItems[] =
+{
+    "draw bitmap",
+    "sprites",
+    "fonts",
+    "canvas gfx",
+    "draw lines",
+};
+
+LcdGfxMenu menu( menuItems, sizeof(menuItems) / sizeof(char *) );
+
+static void bitmapDemo()
+{
+    display.drawBitmap1(0, 0, 128, 64, Owl);
+    lcd_delay(1000);
+    display.getInterface().invertMode();
+    lcd_delay(2000);
+    display.getInterface().normalMode();
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////OLED//////////////////////
-void testdrawchar(void) {
-  display.clearDisplay();
-
-  display.setTextSize(1);      // Normal 1:1 pixel scale
-  display.setTextColor(SSD1306_WHITE); // Draw white text
-  display.setCursor(0, 0);     // Start at top-left corner
-  display.cp437(true);         // Use full 256 char 'Code Page 437' font
-
-  // Not all the characters will fit on the display. This is normal.
-  // Library will draw what it can and the rest will be clipped.
-  for(int16_t i=0; i<256; i++) {
-    if(i == '\n') display.write(' ');
-    else          display.write(i);
-  }
-
-  display.display();
-  delay(2000);
-}
-
-#define XPOS   0 // Indexes into the 'icons' array in function below
-#define YPOS   1
-#define DELTAY 2
-
-void testanimate(const uint8_t *bitmap, uint8_t w, uint8_t h) {
-  int8_t f, icons[NUMFLAKES][3];
-
-  // Initialize 'snowflake' positions
-  for(f=0; f< NUMFLAKES; f++) {
-    icons[f][XPOS]   = random(1 - LOGO_WIDTH, display.width());
-    icons[f][YPOS]   = -LOGO_HEIGHT;
-    icons[f][DELTAY] = random(1, 6);
-    Serial.print(F("x: "));
-    Serial.print(icons[f][XPOS], DEC);
-    Serial.print(F(" y: "));
-    Serial.print(icons[f][YPOS], DEC);
-    Serial.print(F(" dy: "));
-    Serial.println(icons[f][DELTAY], DEC);
-  }
-
-  for(;;) { // Loop forever...
-    display.clearDisplay(); // Clear the display buffer
-
-    // Draw each snowflake:
-    for(f=0; f< NUMFLAKES; f++) {
-      display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, SSD1306_WHITE);
+static void spriteDemo()
+{
+    display.clear();
+    /* Declare variable that represents our sprite */
+    NanoPoint sprite = {0, 0};
+    for (int i=0; i<250; i++)
+    {
+        lcd_delay(15);
+        /* Erase sprite on old place. The library knows old position of the sprite. */
+        display.setColor( 0 );
+        display.drawBitmap1( sprite.x, sprite.y, spriteWidth, 8, heartImage );
+        sprite.x++;
+        if (sprite.x >= display.width())
+        {
+            sprite.x = 0;
+        }
+        sprite.y++;
+        if (sprite.y >= display.height())
+        {
+            sprite.y = 0;
+        }
+        /* Draw sprite on new place */
+        display.setColor( 0xFFFF );
+        display.drawBitmap1( sprite.x, sprite.y, spriteWidth, 8, heartImage );
     }
-
-    display.display(); // Show the display buffer on the screen
-    delay(200);        // Pause for 1/10 second
-
-    // Then update coordinates of each flake...
-    for(f=0; f< NUMFLAKES; f++) {
-      icons[f][YPOS] += icons[f][DELTAY];
-      // If snowflake is off the bottom of the screen...
-      if (icons[f][YPOS] >= display.height()) {
-        // Reinitialize to a random position, just off the top
-        icons[f][XPOS]   = random(1 - LOGO_WIDTH, display.width());
-        icons[f][YPOS]   = -LOGO_HEIGHT;
-        icons[f][DELTAY] = random(1, 6);
-      }
-    }
-  }
 }
-//////////////////////////////////////////////////////////////////////////////////OLED//////////////////////
 
+
+static void textDemo()
+{
+    display.setFixedFont(ssd1306xled_font6x8);
+    display.clear();
+    display.printFixed(0,  8, "Normal text", STYLE_NORMAL);
+    display.printFixed(0, 16, "Bold text", STYLE_BOLD);
+    display.printFixed(0, 24, "Italic text", STYLE_ITALIC);
+    display.invertColors();
+    display.printFixed(0, 32, "Inverted bold", STYLE_BOLD);
+    display.invertColors();
+    lcd_delay(3000);
+    display.clear();
+}
+
+static void canvasDemo()
+{
+    NanoCanvas<64,16,1> canvas;
+    display.clear();
+    canvas.clear();
+    canvas.setColor( 0xFF );
+    canvas.fillRect(10, 3, 80, 5);
+    display.drawCanvas((display.width()-64)/2, 1, canvas);
+    lcd_delay(500);
+    canvas.setColor( 0xFF );
+    canvas.fillRect(50, 1, 60, 15);
+    display.drawCanvas((display.width()-64)/2, 1, canvas);
+    lcd_delay(1500);
+    canvas.setFixedFont(ssd1306xled_font6x8);
+    canvas.printFixed(20, 1, " DEMO ", STYLE_BOLD );
+    display.drawCanvas((display.width()-64)/2, 1, canvas);
+    lcd_delay(3000);
+}
+
+static void drawLinesDemo()
+{
+    display.clear();
+    for (uint8_t y = 0; y < display.height(); y += 8)
+    {
+        display.drawLine(0,0, display.width() -1, y);
+    }
+    for (uint8_t x = display.width() - 1; x > 7; x -= 8)
+    {
+        display.drawLine(0,0, x, display.height() - 1);
+    }
+    lcd_delay(3000);
+}
+////////////////////
 
 void setup() {
   Serial.begin(115200);
@@ -232,10 +232,49 @@ void setup() {
   server.serveStatic("/web-ui.js", LittleFS, "/web-ui.js");
   server.begin();
 
+  //////////////////////////
+  display.begin();
+  display.setFixedFont(ssd1306xled_font6x8);
+  display.fill( 0x00 );
+  menu.show( display );
+  //////////////////////////
 }
 
-void loop() {
 
-  // put your main code here, to run repeatedly:
+
+
+
+void loop() {
+  lcd_delay(1000);
+  switch (menu.selection())
+  {
+      case 0:
+          bitmapDemo();
+          break;
+
+      case 1:
+          spriteDemo();
+          break;
+
+      case 2:
+          textDemo();
+          break;
+
+      case 3:
+          canvasDemo();
+          break;
+
+      case 4:
+          drawLinesDemo();
+          break;
+
+      default:
+          break;
+  }
+  display.fill( 0x00 );
+  menu.show( display );
+  lcd_delay(500);
+  menu.down();
+  menu.show( display );
 }
 
