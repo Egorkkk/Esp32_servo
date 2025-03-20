@@ -1,29 +1,7 @@
 
 #include <Wire.h>
 #include <Arduino.h>
-
-// Адреса I2C устройств
-#define MPU6050_ADDR 0x68  // Адрес MPU-6050 по умолчанию
-#define QMC5883L_ADDR 0x0D // Адрес QMC5883L по умолчанию
-#define BMP180_ADDR 0x77
-
-// Регистры MPU-6050
-#define MPU6050_PWR_MGMT_1 0x6B
-#define MPU6050_ACCEL_XOUT_H 0x3B
-#define MPU6050_GYRO_XOUT_H 0x43
-
-// Регистры QMC5883L
-#define QMC5883L_CONFIG_REG_A 0x09
-#define QMC5883L_DATA_XOUT_LSB 0x00
-
-// Регистры BMP180
-#define BMP180_CAL_AC1 0xAA  // Калибровочные данные
-#define BMP180_CONTROL 0xF4
-#define BMP180_DATA 0xF6
-#define BMP180_READ_TEMP_CMD 0x2E
-#define BMP180_READ_PRESS_CMD 0x34
-#define I2C_SDA_PIN 18  // Новый пин для SDA
-#define I2C_SCL_PIN 19  // Новый пин для SCL
+#include "bmp180.h"
 
 // Калибровочные данные BMP180
 int16_t AC1, AC2, AC3, B1_cal, B2, MB, MC, MD;
@@ -58,8 +36,6 @@ bool bmp180Init() {
 
   return true;
 }
-
-
 
 float bmp180GetTemperature() {
   // Запуск измерения температуры
@@ -128,14 +104,7 @@ float bmp180GetAltitude(float pressure) {
 
 /*
 void setup() {
-  Serial.begin(115200); // Инициализация Serial для вывода данных
-  Wire.begin();         // Инициализация I2C (SDA и SCL по умолчанию на ESP32: 21 и 22)
 
-  // Инициализация MPU-6050
-  Wire.beginTransmission(MPU6050_ADDR);
-  Wire.write(MPU6050_PWR_MGMT_1); // Регистр управления питанием
-  Wire.write(0x00);               // Вывод из спящего режима
-  Wire.endTransmission(true);
 
   // Инициализация QMC5883L
   Wire.beginTransmission(QMC5883L_ADDR);
@@ -154,28 +123,7 @@ void setup() {
 }
 
 void loop() {
-  // Считывание данных с MPU-6050
-  int16_t accelX, accelY, accelZ, gyroX, gyroY, gyroZ;
 
-  // Чтение акселерометра
-  Wire.beginTransmission(MPU6050_ADDR);
-  Wire.write(MPU6050_ACCEL_XOUT_H); // Начальный регистр данных акселерометра
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU6050_ADDR, 6, true); // Запрос 6 байт (X, Y, Z)
-  accelX = Wire.read() << 8 | Wire.read();
-  accelY = Wire.read() << 8 | Wire.read();
-  accelZ = Wire.read() << 8 | Wire.read();
-  Wire.endTransmission(true);
-
-  // Чтение гироскопа
-  Wire.beginTransmission(MPU6050_ADDR);
-  Wire.write(MPU6050_GYRO_XOUT_H); // Начальный регистр данных гироскопа
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU6050_ADDR, 6, true); // Запрос 6 байт (X, Y, Z)
-  gyroX = Wire.read() << 8 | Wire.read();
-  gyroY = Wire.read() << 8 | Wire.read();
-  gyroZ = Wire.read() << 8 | Wire.read();
-  Wire.endTransmission(true);
 
   // Считывание данных с QMC5883L
   int16_t magX, magY, magZ;

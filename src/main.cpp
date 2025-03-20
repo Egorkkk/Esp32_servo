@@ -4,19 +4,37 @@
 #include <AsyncTCP.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
-
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
 
 #include "lcdgfx.h"
 #include "lcdgfx_gui.h"
 #include "owl.h"
+
+Adafruit_MPU6050 mpu;
+
+// Адреса I2C устройств
+#define MPU6050_ADDR 0x68  // Адрес MPU-6050 по умолчанию
+#define QMC5883L_ADDR 0x0D // Адрес QMC5883L по умолчанию
+
+
+// Регистры MPU-6050
+#define MPU6050_PWR_MGMT_1 0x6B
+#define MPU6050_ACCEL_XOUT_H 0x3B
+#define MPU6050_GYRO_XOUT_H 0x43
+
+// Регистры QMC5883L
+#define QMC5883L_CONFIG_REG_A 0x09
+#define QMC5883L_DATA_XOUT_LSB 0x00
+
 DisplaySH1106_128x64_SPI display(22,{-1, 5, 21, 0,23,19});
 
 static AsyncWebServer server(80);
 
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-const char* ssid = "Lookfilm _B7";
-const char* password = "lookfilm";
+const char* ssid = "Robocast2.4G";
+const char* password = "1008121982";
 IPAddress local_IP(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -136,6 +154,20 @@ static void textDemo()
     display.clear();
 }
 
+static void LCDText()
+{
+    display.setFixedFont(ssd1306xled_font6x8);
+    display.clear();
+    display.printFixed(0,  8, "Normal text", STYLE_NORMAL);
+    display.printFixed(0, 16, "Bold text", STYLE_BOLD);
+    display.printFixed(0, 24, "Italic text", STYLE_ITALIC);
+    display.invertColors();
+    display.printFixed(0, 32, "Inverted bold", STYLE_BOLD);
+    display.invertColors();
+    lcd_delay(3000);
+    display.clear();
+}
+
 static void canvasDemo()
 {
     NanoCanvas<64,16,1> canvas;
@@ -172,7 +204,7 @@ static void drawLinesDemo()
 
 void setup() {
   Serial.begin(115200);
-
+  Wire.begin(17, 18);
 
 
   //WiFi.mode(WIFI_AP);
@@ -222,14 +254,21 @@ void setup() {
   display.fill( 0x00 );
   menu.show( display );
   //////////////////////////
+
+  // Инициализация MPU-6050
+  Wire.beginTransmission(MPU6050_ADDR);
+  Wire.write(MPU6050_PWR_MGMT_1); // Регистр управления питанием
+  Wire.write(0x00);               // Вывод из спящего режима
+  Wire.endTransmission(true);
+
+
 }
 
 
 
-
-
 void loop() {
-  lcd_delay(1000);
+  lcd_delay(100);
+  /*
   switch (menu.selection())
   {
       case 0:
@@ -260,5 +299,33 @@ void loop() {
   lcd_delay(500);
   menu.down();
   menu.show( display );
+ */
+
+  // Считывание данных с MPU-6050
+  int16_t accelX, accelY, accelZ, gyroX, gyroY, gyroZ;
+  String accelStr;
+
+  // Чтение акселерометра
+  Wire.beginTransmission(MPU6050_ADDR);
+  Wire.write(MPU6050_ACCEL_XOUT_H); // Начальный регистр данных акселерометра
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU6050_ADDR, 6, true); // Запрос 6 байт (X, Y, Z)
+  accelX = Wire.read() << 8 | Wire.read();
+  accelY = Wire.read() << 8 | Wire.read();
+  accelZ = Wire.read() << 8 | Wire.read();
+  Wire.endTransmission(true);
+
+  // Чтение гироскопа
+  Wire.beginTransmission(MPU6050_ADDR);
+  Wire.write(MPU6050_GYRO_XOUT_H); // Начальный регистр данных гироскопа
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU6050_ADDR, 6, true); // Запрос 6 байт (X, Y, Z)
+  gyroX = Wire.read() << 8 | Wire.read();
+  gyroY = Wire.read() << 8 | Wire.read();
+  gyroZ = Wire.read() << 8 | Wire.read();
+  Wire.endTransmission(true);
+
+  accelStr = String(accelX) + " " + String(accelY) + " " + String(accelZ);
+  display.printFixed(0,  8, accelStr.c_str(), STYLE_NORMAL);
 }
 
