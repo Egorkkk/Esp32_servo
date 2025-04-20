@@ -324,6 +324,185 @@
 </div>
 
 <div id="POSITION" class="tabcontent">
+    <h2>Настройки камер</h2>
+    <button onclick="enableMotors()">Включить моторы</button>
+
+    <div id="cameraBlocks">
+      <!-- ===== Камера Лево ===== -->
+      <div class="camera-block" id="block-camL">
+        <h3>Камера Лево</h3>
+        <label>Тангаж камеры (групповой):</label>
+        <input type="range" min="0" max="180" value="90" oninput="groupPitch('camL', this.value)">
+        <br><br>
+  
+        <div class="motor" data-id="camL1">
+          <strong>Тангаж A</strong><br>
+          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+  
+        <div class="motor" data-id="camL2">
+          <strong>Тангаж B</strong><br>
+          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+  
+        <div class="motor" data-id="camL_YAW">
+          <strong>Рыскание</strong><br>
+          Угол: <input type="range" min="0" max="180" value="135" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+      </div>
+  
+      <!-- ===== Камера Центр ===== -->
+      <div class="camera-block" id="block-camC">
+        <h3>Камера Центр</h3>
+        <label>Тангаж камеры (групповой):</label>
+        <input type="range" min="0" max="180" value="90" oninput="groupPitch('camC', this.value)">
+        <br><br>
+  
+        <div class="motor" data-id="camC1">
+          <strong>Тангаж A</strong><br>
+          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+  
+        <div class="motor" data-id="camC2">
+          <strong>Тангаж B</strong><br>
+          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+  
+        <div class="motor" data-id="camC_YAW">
+          <strong>Рыскание</strong><br>
+          Угол: <input type="range" min="0" max="180" value="135" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+      </div>
+  
+      <!-- ===== Камера Право ===== -->
+      <div class="camera-block" id="block-camR">
+        <h3>Камера Право</h3>
+        <label>Тангаж камеры (групповой):</label>
+        <input type="range" min="0" max="180" value="90" oninput="groupPitch('camR', this.value)">
+        <br><br>
+  
+        <div class="motor" data-id="camR1">
+          <strong>Тангаж A</strong><br>
+          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+  
+        <div class="motor" data-id="camR2">
+          <strong>Тангаж B</strong><br>
+          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+  
+        <div class="motor" data-id="camR_YAW">
+          <strong>Рыскание</strong><br>
+          Угол: <input type="range" min="0" max="180" value="135" oninput="updateAngle(this)">
+          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
+        </div>
+      </div>
+    </div>
+  
+    <br>
+    <button onclick="saveAll()">Сохранить все настройки</button>
+    <button onclick="loadSettings()">Показать текущие настройки</button>
+  
+    <pre id="settingsOutput"></pre>
+      
+      <script>
+        function updateOutput(id) {
+          document.getElementById(id + 'Out').value = document.getElementById(id).value;
+        }
+      
+        function loadMotor() {
+          const id = document.getElementById('motorSelect').value;
+          fetch('/get?id=' + id)
+            .then(res => res.json())
+            .then(data => {
+              document.getElementById('angle').value = data.angle;
+              document.getElementById('angleOut').value = data.angle;
+              document.getElementById('min').value = data.min;
+              document.getElementById('max').value = data.max;
+              document.getElementById('offset').value = data.offset;
+            });
+        }
+      
+        function saveMotor(persist = false) {
+            const id = document.getElementById('motorSelect').value;
+            const params = new URLSearchParams({
+              id: id,
+              angle: document.getElementById('angle').value,
+              min: document.getElementById('min').value,
+              max: document.getElementById('max').value,
+              offset: document.getElementById('offset').value
+            });
+        
+            if (persist) {
+              params.append("save", "true"); // только если сохранение явно запрошено
+            }
+        
+            fetch('/set?' + params.toString())
+              .then(() => {
+                alert(persist ? 'Настройки сохранены!' : 'Параметры применены!');
+                loadMotor(); // обновим данные
+              });
+        }
+
+        function enableMotors() {
+            fetch('/enable')
+            .then(() => alert('Моторы активированы!'))
+            .catch(() => alert('Ошибка при активации моторов'));
+        }
+        function liveUpdateAngle(value) {
+            const id = document.getElementById('motorSelect').value;
+            const params = new URLSearchParams({
+                id: id,
+                angle: value
+            });
+
+            fetch('/set?' + params.toString())
+                .then(() => {
+                document.getElementById('angleValue').innerText = value + "°";
+            });
+        }
+        function updateAngle(slider) {
+          const motorId = slider.closest('.motor').dataset.id;
+          fetch(`/set?id=${motorId}&angle=${slider.value}`);
+        }
+
+        function updateOffset(slider) {
+          const motorId = slider.closest('.motor').dataset.id;
+          fetch(`/set?id=${motorId}&offset=${slider.value}`);
+        }
+
+        function groupPitch(cameraPrefix, value) {
+          fetch(`/set?id=${cameraPrefix}1&angle=${value}`);
+          fetch(`/set?id=${cameraPrefix}2&angle=${value}`);
+        }
+
+        function saveAll() {
+          const allMotors = document.querySelectorAll('.motor');
+          allMotors.forEach(m => {
+            const id = m.dataset.id;
+            const angle = m.querySelectorAll('input')[0].value;
+            const offset = m.querySelectorAll('input')[1].value;
+            fetch(`/set?id=${id}&angle=${angle}&offset=${offset}&save=true`);
+          });
+        }
+
+        function loadSettings() {
+          fetch('/debug')
+            .then(res => res.text())
+            .then(text => {
+              document.getElementById('settingsOutput').innerText = text;
+            });
+        }
+        window.onload = loadMotor;
+      </script>
 </div>
 <div id="SETTINGS" class="tabcontent">
 </div>
