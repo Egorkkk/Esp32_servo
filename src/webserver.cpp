@@ -70,8 +70,8 @@ void setupServer() {
         if (save) {
           Preferences prefs;
           prefs.begin("motors", false);
-          prefs.putInt((m.id + "_minAngle").c_str(), m.minAngle);
-          prefs.putInt((m.id + "_maxAngle").c_str(), m.maxAngle);
+          prefs.putInt((m.id + "_min").c_str(), m.minAngle);
+          prefs.putInt((m.id + "_max").c_str(), m.maxAngle);
           prefs.putInt((m.id + "_offset").c_str(), m.offset);
           prefs.end();
           Serial.printf("[%s] Настройки сохранены в память\n", m.id.c_str());
