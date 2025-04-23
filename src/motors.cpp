@@ -21,15 +21,17 @@ void applyServo(ServoConfig &m) {
 
   void setupMotors() {
     motors = {
-      {"camL1", "Камера Лево (Тангаж A)", SERVO_7_PIN, 90, 75, 105, 0, false},
-      {"camL2", "Камера Лево (Тангаж B)", SERVO_9_PIN, 90, 75, 105, 0, true},
-      {"camL_YAW", "Камера Лево (Рыскание)", SERVO_1_PIN, 135, 90, 180, 0},
-      {"camC1", "Камера Центр (Тангаж A)", SERVO_8_PIN, 90, 75, 105, 0, false},
-      {"camC2", "Камера Центр (Тангаж B)", SERVO_5_PIN, 90, 75, 105, 0, true},
-      {"camC_YAW", "Камера Центр (Рыскание)", SERVO_2_PIN, 135, 90, 180, 0},
-      {"camR1", "Камера Право (Тангаж A)", SERVO_4_PIN, 90, 75, 105, 0, false},
-      {"camR2", "Камера Право (Тангаж B)", SERVO_6_PIN, 90, 75, 105, 0, true},
-      {"camR_YAW", "Камера Право (Рыскание)", SERVO_3_PIN, 135, 90, 180, 0}
+      {"camL1", "Камера Лево (Тангаж A)", SERVO_7_PIN, 90, 75, 105, 0, false, 14.0/24.0, 90},
+      {"camL2", "Камера Лево (Тангаж B)", SERVO_9_PIN, 90, 75, 105, 0, true, 14.0/24.0, 90},
+      {"camL_YAW", "Камера Лево (Рыскание)", SERVO_1_PIN, 135, 90, 180, 0, false, 14.0/24.0, 90},
+  
+      {"camC1", "Камера Центр (Тангаж A)", SERVO_8_PIN, 90, 75, 105, 0, false, 14.0/24.0, 0},
+      {"camC2", "Камера Центр (Тангаж B)", SERVO_5_PIN, 90, 75, 105, 0, true, 14.0/24.0, 0},
+      {"camC_YAW", "Камера Центр (Рыскание)", SERVO_2_PIN, 135, 90, 180, 0, false, 14.0/24.0, 0},
+  
+      {"camR1", "Камера Право (Тангаж A)", SERVO_4_PIN, 90, 75, 105, 0, false, 14.0/24.0, -90},
+      {"camR2", "Камера Право (Тангаж B)", SERVO_6_PIN, 90, 75, 105, 0, true, 14.0/24.0, -90},
+      {"camR_YAW", "Камера Право (Рыскание)", SERVO_3_PIN, 135, 90, 180, 0, false, 14.0/24.0, -90}
     };
   
     prefs.begin("motors", false);
@@ -60,4 +62,13 @@ void applyServo(ServoConfig &m) {
   
     motorsEnabled = true;
     Serial.println("[enable] Все сервы активированы.");
+  }
+  // Преобразование из угла сервы (0–180) в угол камеры (в градусах)
+  int servoToCameraAngle(const ServoConfig& m) {
+    return round((m.angle - 90 + m.offset) * m.gearRatio + m.cameraZero);
+  }
+
+  // Обратное преобразование: из угла камеры в угол сервы
+  int cameraToServoAngle(const ServoConfig& m, int cameraAngle) {
+    return round((cameraAngle - m.cameraZero) / m.gearRatio - m.offset + 90);
   }

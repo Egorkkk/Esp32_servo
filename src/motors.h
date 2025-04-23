@@ -27,6 +27,8 @@ struct ServoConfig {
     int maxAngle;
     int offset;
     bool isMirrored;
+    float gearRatio;
+    int cameraZero;
     Servo servo;
   
     ServoConfig(
@@ -37,7 +39,9 @@ struct ServoConfig {
       int _minAngle = 0,
       int _maxAngle = 180,
       int _offset = 0,
-      bool _isMirrored = false
+      bool _isMirrored = false,
+      float _gearRatio = 1.0,
+      int _cameraZero = 0
     )
       : id(_id),
         cameraName(_name),
@@ -46,7 +50,9 @@ struct ServoConfig {
         minAngle(_minAngle),
         maxAngle(_maxAngle),
         offset(_offset),
-        isMirrored(_isMirrored)
+        isMirrored(_isMirrored),
+        gearRatio(_gearRatio),
+        cameraZero(_cameraZero)
     {}
   };
 extern std::vector<ServoConfig> motors;
@@ -55,3 +61,5 @@ extern bool motorsEnabled;
 void applyServo(ServoConfig &m);
 void setupMotors();
 void enableMotors();
+int servoToCameraAngle(const ServoConfig& m);
+int cameraToServoAngle(const ServoConfig& m, int cameraAngle);

@@ -18,6 +18,15 @@ const motorIds = [
   "camR1", "camR_YAW"
 ];
 
+const motorConfig = {
+  camL1:     { gearRatio: 14/24, cameraZero: 90 },
+  camL_YAW:  { gearRatio: 14/24, cameraZero: 90 },
+  camC1:     { gearRatio: 14/24, cameraZero: 0 },
+  camC_YAW:  { gearRatio: 14/24, cameraZero: 0 },
+  camR1:     { gearRatio: 14/24, cameraZero: -90 },
+  camR_YAW:  { gearRatio: 14/24, cameraZero: -90 }
+};
+
 function loadMotorLimits() {
   motorIds.forEach(id => {
     fetch(`/get?id=${id}`)
@@ -61,17 +70,27 @@ function onWheelMove(e) {
   if (delta < -180) delta += 360;
   lastAngle = newAngle;
 
+  // обновляем локальный угол
   angles[targetId] = (angles[targetId] || 0) + delta * sensitivity;
+
+  // ограничения из prefs
   const limits = motorLimits[targetId] || { min: -30, max: 30 };
   angles[targetId] = Math.max(limits.min, Math.min(limits.max, angles[targetId]));
 
-  const out = Math.round(90 + angles[targetId]);
-  document.getElementById(`display-${targetId}`).innerText = `${targetId.includes("YAW") ? "Yaw" : "Pitch"}: ${out}°`;
+  // вычисляем сервоугол и реальный угол камеры
+  const gear = motorConfig[targetId]?.gearRatio || 1;
+  const zero = motorConfig[targetId]?.cameraZero || 0;
+  const servoOut = Math.round(90 + angles[targetId]);
+  const cameraOut = Math.round((servoOut - 90) * gear + zero);
+
+  // обновляем UI
+  document.getElementById(`display-${targetId}`).innerText = `${targetId.includes("YAW") ? "Yaw" : "Pitch"}: ${cameraOut}°`;
   document.querySelector(`.wheel[data-id="${targetId}"] .indicator`).style.transform = `translateX(-50%) rotate(${angles[targetId]}deg)`;
 
-  if (lastSentAngles[targetId] !== out) {
-    fetch(`/set?id=${targetId}&angle=${out}`);
-    lastSentAngles[targetId] = out;
+  // отправляем сервоугол, если изменился
+  if (lastSentAngles[targetId] !== servoOut) {
+    fetch(`/set?id=${targetId}&angle=${servoOut}`);
+    lastSentAngles[targetId] = servoOut;
   }
 }
 
@@ -118,3 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
   updateInterfaceLockState();
   centerAllMotors();
 });
+
+function servoToCamera(servoAngle, gearRatio, cameraZero) {
+  return Math.round((servoAngle - 90) * gearRatio + cameraZero);
+}
+
+function cameraToServo(cameraAngle, gearRatio, cameraZero) {
+  return Math.round((cameraAngle - cameraZero) / gearRatio + 90);
+}
