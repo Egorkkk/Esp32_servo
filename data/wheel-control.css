@@ -1,0 +1,66 @@
+/* Стили для блока управления позициями камер */
+
+.wheel-layout {
+    display: flex;
+    gap: 30px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  
+  .camera-wheel-block {
+    flex: 1;
+    min-width: 280px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+     background: #222222;
+    text-align: center;
+  }
+  
+  .wheel {
+    width: 150px;
+    height: 150px;
+    border: 5px solid #444;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ddd 60%, #bbb);
+    margin: 10px auto;
+    position: relative;
+    cursor: grab;
+  }
+  
+  .wheel:active {
+    cursor: grabbing;
+  }
+  
+  .indicator {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #161010;
+    border-radius: 50%;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    transform-origin: 50% 70px;
+    pointer-events: none;
+  }
+  
+  .angle-display {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 5px 0 10px;
+  }
+  .center-controls {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .center-controls button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #eee;
+    cursor: pointer;
+  }

@@ -11,11 +11,17 @@
 
         <!-- Linking the stylesheet -->
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="wheel-control.css">
     </head>
     <body onload="bodyOnLoad()">
         <!-- JavaScript Linking -->
         <script src="BMDevice.js"></script>
         <script src="web-ui.js"></script>
+        <script src="motor-control-sync.js"></script>
+        <script src="debounced-servo-control.js"></script>
+        <script src="load-motor-state.js"></script>
+        <script src="web-position.js"></script>
+        <script src="wheel-control.js"></script>
         <!--<script>document.getElementById("defaultOpen").click();</script>-->
         <!------ Page Content ------>
 
@@ -324,10 +330,52 @@
 </div>
 
 <div id="POSITION" class="tabcontent">
+    <h2>Управление позициями камер</h2>
+    <div class="motor-controls">
+        <button onclick="enableMotors()">Включить моторы</button>
+        <button onclick="disableMotors()">Отключить все моторы</button>
+    </div>
+
+    <div class="center-controls">
+        <button onclick="centerAllMotors()">Центровать все камеры</button>
+    </div>
+    <div class="wheel-layout">
+      <div class="camera-wheel-block">
+        <h3>Камера Лево</h3>
+        <div class="wheel" data-id="camL1"><div class="indicator"></div></div>
+        <div class="wheel" data-id="camL_YAW"><div class="indicator"></div></div>
+        <div class="angle-display" id="display-camL1">Pitch: 90°</div>
+        <div class="angle-display" id="display-camL_YAW">Yaw: 90°</div>
+        <button onclick="resetAngle('camL1')">Сброс Pitch</button>
+        <button onclick="resetAngle('camL_YAW')">Сброс Yaw</button>
+      </div>
+  
+      <div class="camera-wheel-block">
+        <h3>Камера Центр</h3>
+        <div class="wheel" data-id="camC1"><div class="indicator"></div></div>
+        <div class="wheel" data-id="camC_YAW"><div class="indicator"></div></div>
+        <div class="angle-display" id="display-camC1">Pitch: 90°</div>
+        <div class="angle-display" id="display-camC_YAW">Yaw: 90°</div>
+        <button onclick="resetAngle('camC1')">Сброс Pitch</button>
+        <button onclick="resetAngle('camC_YAW')">Сброс Yaw</button>
+      </div>
+  
+      <div class="camera-wheel-block">
+        <h3>Камера Право</h3>
+        <div class="wheel" data-id="camR1"><div class="indicator"></div></div>
+        <div class="wheel" data-id="camR_YAW"><div class="indicator"></div></div>
+        <div class="angle-display" id="display-camR1">Pitch: 90°</div>
+        <div class="angle-display" id="display-camR_YAW">Yaw: 90°</div>
+        <button onclick="resetAngle('camR1')">Сброс Pitch</button>
+        <button onclick="resetAngle('camR_YAW')">Сброс Yaw</button>
+      </div>
+    </div>   
+</div>
+
+<div id="SETTINGS" class="tabcontent">
     <h2>Настройки камер</h2>
     <button onclick="enableMotors()">Включить моторы</button>
-
-    <div id="cameraBlocks">
+    <div class="camera-layout">
       <!-- ===== Камера Лево ===== -->
       <div class="camera-block" id="block-camL">
         <h3>Камера Лево</h3>
@@ -336,27 +384,61 @@
         <br><br>
   
         <div class="motor" data-id="camL1">
-          <strong>Тангаж A</strong><br>
-          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
-        </div>
+            <strong>Тангаж A</strong><br>
+          
+            Угол:
+            <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+            <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+          
+            Оффсет:
+            <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+            <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+          
+            Мин. угол:
+            <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+            <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+          
+            Макс. угол:
+            <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+            <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
+          </div>
   
         <div class="motor" data-id="camL2">
           <strong>Тангаж B</strong><br>
-          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
   
         <div class="motor" data-id="camL_YAW">
           <strong>Рыскание</strong><br>
-          Угол: <input type="range" min="0" max="180" value="135" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
       </div>
   
@@ -369,26 +451,59 @@
   
         <div class="motor" data-id="camC1">
           <strong>Тангаж A</strong><br>
-          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
   
         <div class="motor" data-id="camC2">
           <strong>Тангаж B</strong><br>
-          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
   
         <div class="motor" data-id="camC_YAW">
           <strong>Рыскание</strong><br>
-          Угол: <input type="range" min="0" max="180" value="135" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
       </div>
   
@@ -401,36 +516,68 @@
   
         <div class="motor" data-id="camR1">
           <strong>Тангаж A</strong><br>
-          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
   
         <div class="motor" data-id="camR2">
           <strong>Тангаж B</strong><br>
-          Угол: <input type="range" min="0" max="180" value="90" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
   
         <div class="motor" data-id="camR_YAW">
           <strong>Рыскание</strong><br>
-          Угол: <input type="range" min="0" max="180" value="135" oninput="updateAngle(this)">
-          Оффсет: <input type="range" min="-30" max="30" value="0" oninput="updateOffset(this)">
-          Мин. угол: <input type="range" min="0" max="180" value="75" oninput="updateMin(this)">
-          Макс. угол: <input type="range" min="0" max="180" value="105" oninput="updateMax(this)">
+          Угол:
+          <input type="range" min="0" max="180" value="90" oninput="syncAngle(this)">
+          <input type="number" min="0" max="180" value="90" onchange="syncAngleInput(this)"><br>
+        
+          Оффсет:
+          <input type="range" min="-30" max="30" value="0" oninput="syncOffset(this)">
+          <input type="number" min="-30" max="30" value="0" onchange="syncOffsetInput(this)"><br>
+        
+          Мин. угол:
+          <input type="range" min="0" max="180" value="75" oninput="syncMin(this)">
+          <input type="number" min="0" max="180" value="75" onchange="syncMinInput(this)"><br>
+        
+          Макс. угол:
+          <input type="range" min="0" max="180" value="105" oninput="syncMax(this)">
+          <input type="number" min="0" max="180" value="105" onchange="syncMaxInput(this)"><br>
         </div>
       </div>
     </div>
-  
     <br>
     <button onclick="saveAll()">Сохранить все настройки</button>
     <button onclick="loadSettings()">Показать текущие настройки</button>
   
     <pre id="settingsOutput"></pre>
-      
+<!--
       <script>
         function updateOutput(id) {
           document.getElementById(id + 'Out').value = document.getElementById(id).value;
@@ -544,12 +691,109 @@
             const motorId = slider.closest('.motor').dataset.id;
             debounceSet(motorId, "max", slider.value);
         }
+        function syncAngle(slider) {
+          const motorId = slider.closest('.motor').dataset.id;
+          const value = slider.value;
+          const numberInput = slider.nextElementSibling;
+          if (numberInput) numberInput.value = value;
+          debounceSet(motorId, "angle", value);
+        }
 
+        function syncAngleInput(numberInput) {
+          const slider = numberInput.previousElementSibling;
+          if (slider && slider.type === "range") {
+            slider.value = numberInput.value;
+            slider.dispatchEvent(new Event('input'));
+          }
+        }
+
+        function syncOffset(slider) {
+          const motorId = slider.closest('.motor').dataset.id;
+          const value = slider.value;
+          const numberInput = slider.nextElementSibling;
+          if (numberInput) numberInput.value = value;
+          debounceSet(motorId, "offset", value);
+        }
+
+        function syncOffsetInput(numberInput) {
+          const slider = numberInput.previousElementSibling;
+          if (slider && slider.type === "range") {
+            slider.value = numberInput.value;
+            slider.dispatchEvent(new Event('input'));
+          }
+        }
+
+        function syncMin(slider) {
+          const motorId = slider.closest('.motor').dataset.id;
+          const value = slider.value;
+          const numberInput = slider.nextElementSibling;
+          if (numberInput) numberInput.value = value;
+          debounceSet(motorId, "min", value);
+        }
+
+        function syncMinInput(numberInput) {
+          const slider = numberInput.previousElementSibling;
+          if (slider && slider.type === "range") {
+            slider.value = numberInput.value;
+            slider.dispatchEvent(new Event('input'));
+          }
+        }
+
+        function syncMax(slider) {
+          const motorId = slider.closest('.motor').dataset.id;
+          const value = slider.value;
+          const numberInput = slider.nextElementSibling;
+          if (numberInput) numberInput.value = value;
+          debounceSet(motorId, "max", value);
+        }
+
+        function syncMaxInput(numberInput) {
+          const slider = numberInput.previousElementSibling;
+          if (slider && slider.type === "range") {
+            slider.value = numberInput.value;
+            slider.dispatchEvent(new Event('input'));
+          }
+        }
+        function loadMotorState(motorId) {
+            fetch(`/get?id=${motorId}`)
+              .then(res => res.json())
+              .then(data => {
+                const block = document.querySelector(`.motor[data-id="${motorId}"]`);
+                if (!block) return;
+            
+                block.querySelector('input[type="range"][oninput*="syncAngle"]').value = data.angle;
+                block.querySelector('input[type="number"][onchange*="syncAngleInput"]').value = data.angle;
+            
+                block.querySelector('input[type="range"][oninput*="syncOffset"]').value = data.offset;
+                block.querySelector('input[type="number"][onchange*="syncOffsetInput"]').value = data.offset;
+            
+                block.querySelector('input[type="range"][oninput*="syncMin"]').value = data.min;
+                block.querySelector('input[type="number"][onchange*="syncMinInput"]').value = data.min;
+            
+                block.querySelector('input[type="range"][oninput*="syncMax"]').value = data.max;
+                block.querySelector('input[type="number"][onchange*="syncMaxInput"]').value = data.max;
+              });
+      }
+
+      function loadAllMotors() {
+          const motorIds = [
+            "camL1", "camL2", "camL_YAW",
+            "camC1", "camC2", "camC_YAW",
+            "camR1", "camR2", "camR_YAW"
+          ];
+
+          motorIds.forEach(loadMotorState);
+      }
         window.onload = loadMotor;
       </script>
-</div>
-<div id="SETTINGS" class="tabcontent">
+-->   
+
 </div>
         <!-- Footer Div -->
+        <script>
+            window.addEventListener("DOMContentLoaded", () => {
+              loadAllMotors();
+            });
+          </script>
     </body>
 </html>

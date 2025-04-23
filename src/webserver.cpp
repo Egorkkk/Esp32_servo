@@ -16,9 +16,14 @@ void setupServer() {
   });
 
   server.serveStatic("/style.css", LittleFS, "/style.css");
+  server.serveStatic("/wheel-control.css", LittleFS, "/wheel-control.css");
   server.serveStatic("/BMDevice.js", LittleFS, "/BMDevice.js");
   server.serveStatic("/web-ui.js", LittleFS, "/web-ui.js");
-  //server.serveStatic("/debounced-servo-control.js", LittleFS, "/debounced-servo-control.js");
+  server.serveStatic("/load-motor-state.js", LittleFS, "/load-motor-state.js");
+  server.serveStatic("/web-position.js", LittleFS, "/web-position.js");
+  server.serveStatic("/motor-control-sync.js", LittleFS, "/motor-control-sync.js");
+  server.serveStatic("/debounced-servo-control.js", LittleFS, "/debounced-servo-control.js");
+  server.serveStatic("/wheel-control.js", LittleFS, "/wheel-control.js");
 
   // Получить параметры конкретного мотора
   server.on("/get", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -85,7 +90,12 @@ void setupServer() {
     enableMotors();
     request->send(200, "text/plain", "Servos enabled");
   });
-
+  
+  server.on("/disable", HTTP_GET, [](AsyncWebServerRequest *request){
+    motorsEnabled = false;
+    Serial.println("Моторы отключены вручную.");
+    request->send(200, "text/plain", "Motors disabled");
+  });
   // Отладочная информация
   server.on("/debug", HTTP_GET, [](AsyncWebServerRequest *request) {
     String out;
@@ -97,6 +107,10 @@ void setupServer() {
            + ", mirrored=" + (m.isMirrored ? "true" : "false") + "\n";
     }
     request->send(200, "text/plain", out);
+  });
+
+  server.on("/status", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "application/json", motorsEnabled ? "true" : "false");
   });
 
   server.begin();

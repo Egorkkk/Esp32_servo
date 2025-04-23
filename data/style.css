@@ -491,4 +491,27 @@ td, tr {
   border-top: none;
 }
 
+.camera-layout {
+    background: #222222;
+    border: 1px solid black;
+    color: #474747;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  
+  .camera-block {
+    flex: 1;
+    min-width: 320px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: #222222;
+    border: 1px solid black;
+    color: white;
+
+  }
 
