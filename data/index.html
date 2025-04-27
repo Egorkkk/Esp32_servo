@@ -360,7 +360,7 @@
 <div id="POSITION" class="tabcontent">
     <h2>Управление позициями камер</h2>
     <div class="motor-controls">
-        <button onclick="enableMotors()">Включить моторы</button>
+      <button id="enableMotorsButton" onclick="enableMotors()">Включить моторы</button>
         <button onclick="disableMotors()">Отключить все моторы</button>
     </div>
 
@@ -402,7 +402,10 @@
 
 <div id="SETTINGS" class="tabcontent">
     <h2>Настройки камер</h2>
-    <button onclick="enableMotors()">Включить моторы</button>
+    <div class="motor-controls">
+      <button id="enableMotorsButton" onclick="enableMotors()">Включить моторы</button>
+      <button onclick="disableMotors()">Отключить все моторы</button>
+    </div>
     <div class="camera-layout">
       <!-- ===== Камера Лево ===== -->
       <div class="camera-block" id="block-camL">
@@ -822,6 +825,7 @@
             window.addEventListener("DOMContentLoaded", () => {
               loadAllMotors();
               rebuildCameraBlocks();
+              initializeMotorDisplays();
             });
           </script>
     </body>

@@ -19,11 +19,11 @@ const motorIds = [
 ];
 
 const motorConfig = {
-  camL1:     { gearRatio: 14/24, cameraZero: 90 },
+  camL1:     { gearRatio: 14/24, cameraZero: 0 },
   camL_YAW:  { gearRatio: 14/24, cameraZero: 90 },
   camC1:     { gearRatio: 14/24, cameraZero: 0 },
   camC_YAW:  { gearRatio: 14/24, cameraZero: 0 },
-  camR1:     { gearRatio: 14/24, cameraZero: -90 },
+  camR1:     { gearRatio: 14/24, cameraZero: 0 },
   camR_YAW:  { gearRatio: 14/24, cameraZero: -90 }
 };
 
@@ -39,8 +39,23 @@ function loadMotorLimits() {
       });
   });
 }
+
 function setSensitivity(val) {
   sensitivity = parseFloat(val);
+}
+
+function initializeMotorDisplays() {
+  motorIds.forEach(id => {
+    const gear = motorConfig[id]?.gearRatio || 1;
+    const zero = motorConfig[id]?.cameraZero || 0;
+    const servoOut = 90; // стартовое положение сервы
+    const cameraOut = Math.round((servoOut - 90) * gear + zero);
+
+    const display = document.getElementById(`display-${id}`);
+    if (display) {
+      display.innerText = `${id.includes("YAW") ? "Yaw" : "Pitch"}: ${cameraOut}°`;
+    }
+  });
 }
 
 function getAngle(e, element) {
@@ -61,7 +76,7 @@ function onWheelDown(e) {
   e.preventDefault();
 }
 
-
+/*
 function onWheelMove(e) {
   if (!isDragging || !targetId) return;
   const wheel = document.querySelector(`.wheel[data-id="${targetId}"]`);
@@ -112,6 +127,71 @@ function onWheelMove(e) {
     }
   }
 }
+*/
+
+
+function onWheelMove(e) {
+  if (!isDragging || !targetId) return;
+  const wheel = document.querySelector(`.wheel[data-id="${targetId}"]`);
+  if (!wheel) return;
+
+  const newAngle = getAngle(e, wheel);
+  let delta = newAngle - lastAngle;
+  if (delta > 180) delta -= 360;
+  if (delta < -180) delta += 360;
+  lastAngle = newAngle;
+
+  if (!(targetId in angles)) angles[targetId] = 0;
+  angles[targetId] += delta * sensitivity;
+
+  const limits = motorLimits[targetId] || { min: -30, max: 30 };
+
+  // Ограничиваем виртуальный угол по сервопозиции
+  const currentServoAngle = 90 + angles[targetId];
+
+  if (currentServoAngle < (90 + limits.min)) {
+    angles[targetId] = limits.min;
+  }
+  if (currentServoAngle > (90 + limits.max)) {
+    angles[targetId] = limits.max;
+  }
+
+  const gear = motorConfig[targetId]?.gearRatio || 1;
+  const zero = motorConfig[targetId]?.cameraZero || 0;
+
+  const servoOut = Math.round(90 + angles[targetId]);
+  const cameraOut = Math.round((servoOut - 90) * gear + zero);
+
+  // Обновляем UI
+  document.getElementById(`display-${targetId}`).innerText =
+    `${targetId.includes("YAW") ? "Yaw" : "Pitch"}: ${cameraOut}°`;
+  wheel.querySelector(".indicator").style.transform = `translateX(-50%) rotate(${angles[targetId]}deg)`;
+
+  // Определяем пары для Pitch
+  const pitchPairs = {
+    camL1: ["camL1", "camL2"],
+    camC1: ["camC1", "camC2"],
+    camR1: ["camR1", "camR2"]
+  };
+
+  // Отправляем команду
+  const pitchGroup = pitchPairs[targetId];
+  if (pitchGroup) {
+    pitchGroup.forEach(id => {
+      if (lastSentAngles[id] !== servoOut) {
+        fetch(`/set?id=${id}&angle=${servoOut}`);
+        lastSentAngles[id] = servoOut;
+      }
+    });
+  } else {
+    if (lastSentAngles[targetId] !== servoOut) {
+      fetch(`/set?id=${targetId}&angle=${servoOut}`);
+      lastSentAngles[targetId] = servoOut;
+    }
+  }
+}
+
+
 function onWheelUp() {
   isDragging = false;
   targetId = null;

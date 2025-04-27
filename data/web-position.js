@@ -31,6 +31,8 @@ function enableMotors() {
     const angle = document.getElementById("liveAngle").value;
     groupPitch(group, angle);
   }
+
+  /*
   function updateInterfaceLockState() {
     fetch("/status")
       .then(res => res.text())
@@ -49,3 +51,41 @@ function enableMotors() {
         });
       });
   }
+*/
+
+function updateInterfaceLockState() {
+  fetch("/status")
+    .then(res => res.text())
+    .then(enabled => {
+      const isEnabled = enabled === "true";
+
+      // Блокируем/разблокируем все штурвалы
+      document.querySelectorAll(".wheel").forEach(wheel => {
+        wheel.style.pointerEvents = isEnabled ? "auto" : "none";
+        wheel.style.opacity = isEnabled ? "1" : "0.4";
+      });
+
+      // Блокируем/разблокируем все input и button, кроме кнопки "Включить моторы"
+      document.querySelectorAll(
+        '#POSITION input, #POSITION button, #SETTINGS input, #SETTINGS button'
+      ).forEach(el => {
+        if (el.id !== "enableMotorsButton") {
+          el.disabled = !isEnabled;
+        }
+      });
+
+      // Визуально затемняем вкладки
+      const positionTab = document.getElementById("POSITION");
+      const settingsTab = document.getElementById("SETTINGS");
+      if (positionTab && settingsTab) {
+        if (!isEnabled) {
+          positionTab.classList.add("disabled");
+          settingsTab.classList.add("disabled");
+        } else {
+          positionTab.classList.remove("disabled");
+          settingsTab.classList.remove("disabled");
+        }
+      }
+    });
+}
+  
