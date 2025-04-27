@@ -18,6 +18,125 @@ var unsavedChanges = [];
 
 var isCamConnected = [];
 
+
+// Список камер — у каждой свой IP
+let allCameras = [
+    new BMDevice('192.168.0.201'), // Камера 1
+    new BMDevice('192.168.0.202'), // Камера 2
+    new BMDevice('192.168.0.203'), // Камера 3
+    null                           // Камера 4 — опциональная
+];
+
+let controlAll = false;
+let fourthCameraEnabled = false;
+
+
+function toggleControlMode() {
+    controlAll = document.getElementById('controlAllCheckbox').checked;
+}
+
+function toggleFourthCamera(enabled) {
+    fourthCameraEnabled = enabled;
+    if (enabled) {
+        allCameras[3] = new BMDevice('192.168.1.104'); // IP четвёртой камеры
+    } else {
+        allCameras[3] = null;
+    }
+    rebuildCameraBlocks();
+}
+
+function rebuildCameraBlocks() {
+    const container = document.getElementById('cameraControlsContainer');
+    container.innerHTML = ''; // Очищаем
+
+    allCameras.forEach((camera, index) => {
+        if (camera !== null) {
+            const block = document.createElement('div');
+            block.className = 'camera-block';
+            block.innerHTML = `
+                <h3>Камера ${index + 1}</h3>
+                <label>Focus:
+                  <input type="range" min="0" max="100" onchange="onFocusChange(${index}, this.value)">
+                </label><br>
+                <label>Iris:
+                  <input type="range" min="0" max="100" onchange="onIrisChange(${index}, this.value)">
+                </label><br>
+                <label>Gain:
+                  <input type="range" min="0" max="100" onchange="onGainChange(${index}, this.value)">
+                </label><br>
+                <label>Shutter:
+                  <input type="range" min="0" max="100" onchange="onShutterChange(${index}, this.value)">
+                </label><br>
+                <label>White Balance:
+                  <input type="range" min="0" max="100" onchange="onWhiteBalanceChange(${index}, this.value)">
+                </label><br>
+                <button onclick="startRecording(${index})">Start Rec</button>
+                <button onclick="stopRecording(${index})">Stop Rec</button>
+                <hr>
+            `;
+            container.appendChild(block);
+        }
+    });
+}
+
+
+function sendCommandToallCameras(commandFunc) {
+    if (controlAll) {
+        allCameras.forEach(camera => {
+            if (camera !== null) commandFunc(camera);
+        });
+    } else {
+        // При передаче через обработчик всегда передаём индекс камеры
+        // Поэтому здесь ничего менять не надо
+    }
+}
+
+function onFocusChange(index, value) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.setFocus(parseInt(value)));
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].setFocus(parseInt(value));
+        }
+    }
+}
+
+function onIrisChange(index, value) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.setIris(parseInt(value)));
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].setIris(parseInt(value));
+        }
+    }
+}
+
+// Аналогично для Gain, Shutter, White Balance...
+
+function startRecording(index) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.startRecording());
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].startRecording();
+        }
+    }
+}
+
+function stopRecording(index) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.stopRecording());
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].stopRecording();
+        }
+    }
+}
+
+
+
+
+
 // Set everything up
 function bodyOnLoad() {
     defaultControlsHTML = document.getElementById("allCamerasContainer").innerHTML;

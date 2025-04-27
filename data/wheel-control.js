@@ -61,6 +61,7 @@ function onWheelDown(e) {
   e.preventDefault();
 }
 
+
 function onWheelMove(e) {
   if (!isDragging || !targetId) return;
   const wheel = document.querySelector(`.wheel[data-id="${targetId}"]`);
@@ -87,13 +88,30 @@ function onWheelMove(e) {
   document.getElementById(`display-${targetId}`).innerText = `${targetId.includes("YAW") ? "Yaw" : "Pitch"}: ${cameraOut}°`;
   document.querySelector(`.wheel[data-id="${targetId}"] .indicator`).style.transform = `translateX(-50%) rotate(${angles[targetId]}deg)`;
 
-  // отправляем сервоугол, если изменился
-  if (lastSentAngles[targetId] !== servoOut) {
-    fetch(`/set?id=${targetId}&angle=${servoOut}`);
-    lastSentAngles[targetId] = servoOut;
+  // Определяем пары моторов для Pitch
+  const pitchPairs = {
+    camL1: ["camL1", "camL2"],
+    camC1: ["camC1", "camC2"],
+    camR1: ["camR1", "camR2"]
+  };
+
+  // отправляем сервоугол(ы)
+  if (pitchPairs[targetId]) {
+    // Если это Pitch — отправляем двум моторам
+    pitchPairs[targetId].forEach(id => {
+      if (lastSentAngles[id] !== servoOut) {
+        fetch(`/set?id=${id}&angle=${servoOut}`);
+        lastSentAngles[id] = servoOut;
+      }
+    });
+  } else {
+    // Если это Yaw — как обычно одному мотору
+    if (lastSentAngles[targetId] !== servoOut) {
+      fetch(`/set?id=${targetId}&angle=${servoOut}`);
+      lastSentAngles[targetId] = servoOut;
+    }
   }
 }
-
 function onWheelUp() {
   isDragging = false;
   targetId = null;

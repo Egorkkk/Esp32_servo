@@ -4,10 +4,10 @@
 <html>
     <head>
         <!-- Page title and metadata -->
-        <title>Camera Control WebUI for Blackmagic Cameras</title>
+        <title>Motocam</title>
         <meta charset="UTF-8">
         <meta name="description" content="JS-based web interface for controlling Blackmagic Design cameras via the official REST API">
-        <meta name="author" content="Dylan Speiser">
+        <meta name="author" content="Robocam">
 
         <!-- Linking the stylesheet -->
         <link rel="stylesheet" href="style.css">
@@ -26,16 +26,44 @@
         <!------ Page Content ------>
 
         <div class="flexContainerH" id="tabSelectContainer">
-            <button class="tabLinks" onclick="openTab(event, 'CAMERAS')" id="defaultOpen">CAMERAS</button>
+          <button class="tabLinks" onclick="openTab(event, 'CAMERAS')">CAMERAS</button>
+            <button class="tabLinks" onclick="openTab(event, 'OLD_CAMERAS')">OLD_CAMERAS</button>
             <button class="tabLinks" onclick="openTab(event, 'POSITION')">POSITION</button>
             <button class="tabLinks" onclick="openTab(event, 'SETTINGS')">SETTINGS</button>
         </div>
 
 
-<div id="CAMERAS" class="tabcontent">
+<div id="CAMERAS" class="tabcontent">        
+  <div>
+    <label>
+      <input type="checkbox" id="controlAllCheckbox" onchange="toggleControlMode()"> Управлять всеми камерами
+    </label>
+  </div>
+  
+  <div>
+    <label>
+      <input type="checkbox" id="fourthCameraCheckbox" onchange="toggleFourthCamera(this.checked)">
+      Подключить четвёртую камеру
+    </label>
+  </div>
+  
+  <hr>
+  
+  <div id="cameraControlsContainer">
+    <!-- Здесь динамически появятся блоки управления камерами -->
+  </div>
+</div>
+
+
+
+
+<div id="OLD_CAMERAS" class="tabcontent">
         <!-- Camera Select Bar -->
 
         <div class="flexContainerH" id="cameraSelectContainer">
+          <label>
+            <input type="checkbox" id="controlAllCheckbox" onchange="toggleControlMode()"> Управлять всеми камерами
+          </label>
             <span class="cameraSwitchLabel selectedCam"><a href="#" onclick="switchCamera(0)">LEFT</a></span>
             <span class="camSelectSeparator">|</span>
             <span class="cameraSwitchLabel"><a href="#" onclick="switchCamera(1)">REAR</a></span>
@@ -793,6 +821,7 @@
         <script>
             window.addEventListener("DOMContentLoaded", () => {
               loadAllMotors();
+              rebuildCameraBlocks();
             });
           </script>
     </body>
