@@ -1,10 +1,9 @@
-<!-- (c) 2024 Dylan Speiser -->
 
 <!DOCTYPE html>
 <html>
     <head>
         <!-- Page title and metadata -->
-        <title>Motocam</title>
+        <title>Motobacks</title>
         <meta charset="UTF-8">
         <meta name="description" content="JS-based web interface for controlling Blackmagic Design cameras via the official REST API">
         <meta name="author" content="Robocam">
@@ -31,6 +30,8 @@
             <button class="tabLinks" onclick="openTab(event, 'CAMERAS')" id="camerasTabBtn">CAMERAS</button>
             <button class="tabLinks" onclick="openTab(event, 'POSITION')" id="positionTabBtn">POSITION</button>
             <button class="tabLinks" onclick="openTab(event, 'SETTINGS')" id="settingsTabBtn">SETTINGS</button>
+
+            <div id="espStatusIndicator" style="color: green; font-weight: bold;">🟢 Контроллер подключен</div>
         </div>
 
 
@@ -562,6 +563,7 @@
               rebuildCameraBlocks();
               initializeMotorDisplays();
               setupGlobalFormatControls();
+              startEspWatchdog();
               document.getElementById('camerasTabBtn')?.click();
             });
           </script>

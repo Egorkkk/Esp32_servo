@@ -10,6 +10,7 @@ let pingIntervalId = null;
 let timecodeIntervalId = null;
 let localTimecodeIntervalId = null;
 let controlAllCameras = false;
+let isEspOnline = true;
 
 const availableFpsOptions = [24, 25, 30, 50, 60];
 const availableCodecOptions = ['BRaw:3_1', 'BRaw:5_1', 'BRaw:8_1', 'BRaw:12_1', 'BRaw:Q0', 'BRaw:Q1', 'BRaw:Q3', 'BRaw:Q5'];
@@ -160,38 +161,6 @@ function startLocalTimecodeTimer() {
         });
     }, 1000 / 25); // обновление 25 раз в секунду
 }
-/*
-async function pingAll() {
-    cameraIPs.forEach(async ip => {
-        const url = `http://${ip}/control/api/v1/system`;
-        try {
-            const response = await fetch(url);
-            allCameraStates[ip].online = response.status === 204;
-        } catch (err) {
-            allCameraStates[ip].online = false;
-        }
-
-        // ⏺️ Проверка состояния записи
-        if (allCameraStates[ip].online) {
-            try {
-                const recResponse = await fetch(`http://${ip}/control/api/v1/transports/0/record`);
-                if (recResponse.ok) {
-                    const data = await recResponse.json();
-                    allCameraStates[ip].recording = data.recording === true;
-                } else {
-                    allCameraStates[ip].recording = false;
-                }
-            } catch (err) {
-                allCameraStates[ip].recording = false;
-            }
-        } else {
-            allCameraStates[ip].recording = false;
-        }
-    });
-
-    rebuildCameraBlocks();
-}
-    */
 
 async function pingAll() {
     for (const ip of cameraIPs) {
@@ -200,26 +169,32 @@ async function pingAll() {
         if (!block) continue;
 
         // === Проверка состояния подключения ===
+        const systemController = new AbortController();
+        const systemTimeout = setTimeout(() => systemController.abort(), 3000); // 3 секунды таймаут
+
         try {
-            const systemResp = await fetch(`http://${ip}/control/api/v1/system`);
+            const systemResp = await fetch(`http://${ip}/control/api/v1/system`, {
+                signal: systemController.signal
+            });
+            clearTimeout(systemTimeout);
+
             const online = systemResp.status === 204;
 
             if (state.online !== online) {
                 state.online = online;
                 block.classList.toggle('offline', !online);
 
-                // Обновляем все input и button
                 const controls = block.querySelectorAll('input, button');
                 controls.forEach(el => {
                     el.disabled = !online;
                 });
             }
         } catch {
+            clearTimeout(systemTimeout);
             if (state.online) {
                 state.online = false;
                 block.classList.add('offline');
 
-                // Отключаем элементы управления
                 const controls = block.querySelectorAll('input, button');
                 controls.forEach(el => {
                     el.disabled = true;
@@ -229,8 +204,15 @@ async function pingAll() {
 
         // === Проверка состояния записи ===
         if (state.online) {
+            const recController = new AbortController();
+            const recTimeout = setTimeout(() => recController.abort(), 3000); // 3 секунды таймаут
+
             try {
-                const recResp = await fetch(`http://${ip}/control/api/v1/transports/0/record`);
+                const recResp = await fetch(`http://${ip}/control/api/v1/transports/0/record`, {
+                    signal: recController.signal
+                });
+                clearTimeout(recTimeout);
+
                 if (recResp.ok) {
                     const data = await recResp.json();
                     const isRecording = data.recording === true;
@@ -240,7 +222,8 @@ async function pingAll() {
                     }
                 }
             } catch {
-                // Не меняем state.recording при ошибке
+                clearTimeout(recTimeout);
+                // Ошибку не обрабатываем, не меняем запись
             }
         } else {
             if (state.recording) {
@@ -414,8 +397,8 @@ function rebuildCameraBlocks() {
             
 
             <div class="control-block">
-                <button onclick="startRecording(${index})" ${!state.online ? 'disabled' : ''}>Start Rec</button>
-                <button onclick="stopRecording(${index})" ${!state.online ? 'disabled' : ''}>Stop Rec</button>
+                <button onclick="startRecording(${index})" ${!state.online ? 'disabled' : ''}>🔴 Rec</button>
+                <button onclick="stopRecording(${index})" ${!state.online ? 'disabled' : ''}>⏹ Stop</button>
             </div>
 
             <hr>
@@ -809,6 +792,52 @@ function getTargetIPs(index) {
         const ip = cameraIPs[index];
         return allCameraStates[ip]?.online ? [ip] : [];
     }
+}
+
+function startEspWatchdog() {
+    setInterval(async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // таймаут 3 секунды
+
+        try {
+            const response = await fetch('/ping', { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) throw new Error("ESP не ответил");
+
+            if (!isEspOnline) {
+                isEspOnline = true;
+                updateEspStatusUI(true);
+            }
+        } catch (err) {
+            clearTimeout(timeoutId);
+
+            if (isEspOnline) {
+                isEspOnline = false;
+                updateEspStatusUI(false);
+            }
+        }
+    }, 2000); // пинг каждые 2 сек
+}
+
+function updateEspStatusUI(online) {
+    const indicator = document.getElementById('espStatusIndicator');
+    if (online) {
+        indicator.textContent = '🟢 Контроллер подключен';
+        indicator.style.color = 'green';
+        setInterfaceEnabled(true);
+    } else {
+        indicator.textContent = '🔴 Нет связи с контроллером';
+        indicator.style.color = 'red';
+        setInterfaceEnabled(false);
+    }
+}
+
+function setInterfaceEnabled(enabled) {
+    // Отключить все элементы управления при обрыве связи
+    document.querySelectorAll('input, button, select').forEach(el => {
+        el.disabled = !enabled;
+    });
 }
 
 function openTab(evt, tabName) {

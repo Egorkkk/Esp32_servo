@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "remote_pult",
+			"path": "../remote_pult"
+		}
+	],
+	"settings": {}
+}

@@ -114,6 +114,10 @@ void setupServer() {
   server.on("/status", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "application/json", motorsEnabled ? "true" : "false");
   });
+  
+  server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", "pong");
+  });
 
   server.begin();
 }
