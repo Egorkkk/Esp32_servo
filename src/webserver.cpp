@@ -14,7 +14,8 @@ void setupServer() {
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/index.html", "text/html");
   });
-
+  
+  server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico");
   server.serveStatic("/style.css", LittleFS, "/style.css");
   server.serveStatic("/wheel-control.css", LittleFS, "/wheel-control.css");
   server.serveStatic("/BMDevice.js", LittleFS, "/BMDevice.js");
