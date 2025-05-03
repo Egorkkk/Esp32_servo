@@ -2,7 +2,8 @@
 let cameraIPs = [
     '192.168.0.201',
     '192.168.0.202',
-    '192.168.0.203'
+    '192.168.0.203',
+    '192.168.0.204'
 ];
 
 let fourthCameraEnabled = true;
@@ -292,6 +293,7 @@ function updateCameraTimecodeInDOM(ip, displayTimecode) {
         //console.warn(`[updateTimecode] ❌ Элемент #${elementId} не найден`);
     }
 }
+
 function decodeBCDTimecode(bcd) {
     function bcdToDec(b) {
         return ((b >> 4) * 10 + (b & 0x0F));
@@ -307,27 +309,20 @@ function toggleFourthCamera(enabled) {
     fourthCameraEnabled = enabled;
     const ip = '192.168.0.204';
 
-    if (enabled) {
-        if (!cameraIPs.includes(ip)) {
-            cameraIPs.push(ip);
-        }
-        if (!allCameraStates[ip]) {
-            allCameraStates[ip] = {
-                ip: ip,
-                online: false,
-                recording: false,
-                timecode: null,
-                desync: false,
-                focus: 50,
-                iris: 2.8,
-                gain: 0,
-                shutter: 180,
-                whiteBalance: 5600,
-                iso: 400
-            };
-        }
-    } else {
-        cameraIPs = cameraIPs.filter(camIp => camIp !== ip);
+    if (enabled && !allCameraStates[ip]) {
+        allCameraStates[ip] = {
+            ip: ip,
+            online: false,
+            recording: false,
+            timecode: null,
+            desync: false,
+            focus: 50,
+            iris: 2.8,
+            gain: 0,
+            shutter: 180,
+            whiteBalance: 5600,
+            iso: 400
+        };
     }
 
     rebuildCameraBlocks();
@@ -403,6 +398,12 @@ function rebuildCameraBlocks() {
 
             <hr>
         `;
+
+        // Если это 4-я камера и она выключена — делаем блок неактивным
+        if (index === 3 && !fourthCameraEnabled) {
+            block.classList.add('disabled-camera');
+            block.querySelectorAll('input, button, select').forEach(el => el.disabled = true);
+        }
         container.appendChild(block);
 
         const focusInput = block.querySelector(`#focus-${index}`);

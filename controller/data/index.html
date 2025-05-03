@@ -25,36 +25,36 @@
         <script src="wheel-control.js"></script>
         <!--<script>document.getElementById("defaultOpen").click();</script>-->
         <!------ Page Content ------>
-
+        <div id="mainInterfaceContainer">
         <div class="flexContainerH" id="tabSelectContainer">
+            <div id="espStatusIndicator" style="color: green; font-weight: bold;">🟢 Контроллер подключен</div>
             <button class="tabLinks" onclick="openTab(event, 'CAMERAS')" id="camerasTabBtn">CAMERAS</button>
             <button class="tabLinks" onclick="openTab(event, 'POSITION')" id="positionTabBtn">POSITION</button>
             <button class="tabLinks" onclick="openTab(event, 'SETTINGS')" id="settingsTabBtn">SETTINGS</button>
-
-            <div id="espStatusIndicator" style="color: green; font-weight: bold;">🟢 Контроллер подключен</div>
         </div>
 
 
 <div id="CAMERAS" class="tabcontent">        
-  <div>
+<!-- Блок управления подключением -->
+<div class="top-section">
+  <div class="inline-controls">
     <label>
-      <input type="checkbox" id="controlAllCheckbox" onchange="toggleControlMode()"> Управлять всеми камерами
+      <input type="checkbox" id="controlAllCheckbox" onchange="toggleControlMode()">
+      Управлять всеми камерами
     </label>
-  </div>
-  
-  <div>
+
     <label>
       <input type="checkbox" id="fourthCameraCheckbox" onchange="toggleFourthCamera(this.checked)">
       Подключить четвёртую камеру
     </label>
-  </div>
-  <div>
-    <button onclick="connectAllCameras()">Подключить все камеры</button>
-  </div>
 
-  <hr>
+    <button onclick="connectAllCameras()">🔌 Подключить все камеры</button>
+  </div>
+</div>
 
-  <div id="globalCameraSettings" style="margin-bottom:10px">
+<!-- Глобальные настройки -->
+<div class="top-section">
+  <div class="inline-controls">
     <label>FPS:
       <select id="fpsSelect">
         <option value="24">24 fps</option>
@@ -64,8 +64,8 @@
         <option value="60">60 fps</option>
       </select>
     </label>
-  
-    <label style="margin-left:20px;">Codec:
+
+    <label>Codec:
       <select id="codecSelect">
         <option value="BRaw:3_1">Blackmagic RAW 3:1</option>
         <option value="BRaw:5_1">Blackmagic RAW 5:1</option>
@@ -77,16 +77,18 @@
         <option value="BRaw:Q5">Blackmagic RAW Q5</option>
       </select>
     </label>
-  
-    <button id="applyFormatBtn" style="margin-left:20px;">Применить настройки</button>
 
-    <button id="startAllBtn" style="margin-left:20px;">🔴 Rec ALL</button>
-    <button id="stopAllBtn" style="margin-left:10px;">⏹ Stop ALL</button>
+    <button id="applyFormatBtn">💾 Применить</button>
+    <button id="startAllBtn">🔴 Rec ALL</button>
+    <button id="stopAllBtn">⏹ Stop ALL</button>
   </div>
+</div>
 
+<div class="camera-blocks-wrapper">
   <div id="cameraControlsContainer">
     <!-- Здесь динамически появятся блоки управления камерами -->
   </div>
+</div>
 </div>
 
 
@@ -564,8 +566,10 @@
               initializeMotorDisplays();
               setupGlobalFormatControls();
               startEspWatchdog();
+              toggleFourthCamera();
               document.getElementById('camerasTabBtn')?.click();
             });
           </script>
+        </div>
     </body>
 </html>
