@@ -18,6 +18,7 @@ void setupServer() {
   server.serveStatic("/style.css", LittleFS, "/style.css");
   server.serveStatic("/wheel-control.css", LittleFS, "/wheel-control.css");
   server.serveStatic("/BMDevice.js", LittleFS, "/BMDevice.js");
+  server.serveStatic("/camera.js", LittleFS, "/camera.js");
   server.serveStatic("/web-ui.js", LittleFS, "/web-ui.js");
   server.serveStatic("/load-motor-state.js", LittleFS, "/load-motor-state.js");
   server.serveStatic("/web-position.js", LittleFS, "/web-position.js");

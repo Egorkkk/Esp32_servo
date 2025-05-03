@@ -19,6 +19,62 @@ var unsavedChanges = [];
 var isCamConnected = [];
 
 
+function sendCommandToallCameras(commandFunc) {
+    if (controlAll) {
+        allCameras.forEach(camera => {
+            if (camera !== null) commandFunc(camera);
+        });
+    } else {
+        // При передаче через обработчик всегда передаём индекс камеры
+        // Поэтому здесь ничего менять не надо
+    }
+}
+
+function onFocusChange(index, value) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.setFocus(parseInt(value)));
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].setFocus(parseInt(value));
+        }
+    }
+}
+
+function onIrisChange(index, value) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.setIris(parseInt(value)));
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].setIris(parseInt(value));
+        }
+    }
+}
+
+// Аналогично для Gain, Shutter, White Balance...
+
+function startRecording(index) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.startRecording());
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].startRecording();
+        }
+    }
+}
+
+function stopRecording(index) {
+    if (controlAll) {
+        sendCommandToallCameras(camera => camera.stopRecording());
+    } else {
+        if (allCameras[index] !== null) {
+            allCameras[index].stopRecording();
+        }
+    }
+}
+
+
+
+
 
 // Set everything up
 function bodyOnLoad() {

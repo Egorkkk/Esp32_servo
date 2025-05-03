@@ -494,7 +494,7 @@ td, tr {
 .camera-layout {
     background: #222222;
     border: 1px solid black;
-    color: #474747;
+    color: #c5c5c5;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;

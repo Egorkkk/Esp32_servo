@@ -211,6 +211,15 @@ function centerAllMotors() {
   });
 }
 
+/*
+function centerAllMotors() {
+  motorIds.forEach(id => {
+    smoothMoveToAngle(id, 90); // 90° — центр
+  });
+}
+*/
+
+
 function disableMotors() {
   fetch("/disable").then(() => {
     centerAllMotors();
@@ -242,4 +251,33 @@ function servoToCamera(servoAngle, gearRatio, cameraZero) {
 
 function cameraToServo(cameraAngle, gearRatio, cameraZero) {
   return Math.round((cameraAngle - cameraZero) / gearRatio + 90);
+}
+
+function smoothMoveToAngle(id, targetAngle = 90, duration = 1000, steps = 50) {
+  const currentAngle = lastSentAngles[id] || 90;
+  const angleStep = (targetAngle - currentAngle) / steps;
+  const stepDelay = duration / steps;
+  let step = 0;
+
+  const interval = setInterval(() => {
+    step++;
+    const newAngle = Math.round(currentAngle + angleStep * step);
+
+    // Обновление внутреннего состояния
+    lastSentAngles[id] = newAngle;
+
+    // Обновление интерфейса
+    angles[id] = newAngle - 90;
+    document.getElementById(`display-${id}`).innerText =
+      `${id.includes("YAW") ? "Yaw" : "Pitch"}: ${newAngle}°`;
+    document.querySelector(`.wheel[data-id="${id}"] .indicator`)
+      .style.transform = `translateX(-50%) rotate(${angles[id]}deg)`;
+
+    // Отправка запроса на сервер
+    fetch(`/set?id=${id}&angle=${newAngle}&save=true`);
+
+    if (step >= steps) {
+      clearInterval(interval);
+    }
+  }, stepDelay);
 }
