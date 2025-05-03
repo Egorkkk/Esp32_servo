@@ -28,9 +28,9 @@
         <!------ Page Content ------>
 
         <div class="flexContainerH" id="tabSelectContainer">
-            <button class="tabLinks" onclick="openTab(event, 'CAMERAS')">CAMERAS</button>
-            <button class="tabLinks" onclick="openTab(event, 'POSITION')">POSITION</button>
-            <button class="tabLinks" onclick="openTab(event, 'SETTINGS')">SETTINGS</button>
+            <button class="tabLinks" onclick="openTab(event, 'CAMERAS')" id="camerasTabBtn">CAMERAS</button>
+            <button class="tabLinks" onclick="openTab(event, 'POSITION')" id="positionTabBtn">POSITION</button>
+            <button class="tabLinks" onclick="openTab(event, 'SETTINGS')" id="settingsTabBtn">SETTINGS</button>
         </div>
 
 
@@ -56,28 +56,31 @@
   <div id="globalCameraSettings" style="margin-bottom:10px">
     <label>FPS:
       <select id="fpsSelect">
-        <option>24</option>
-        <option selected>25</option>
-        <option>30</option>
-        <option>50</option>
-        <option>60</option>
+        <option value="24">24 fps</option>
+        <option value="25" selected>25 fps</option>
+        <option value="30">30 fps</option>
+        <option value="50">50 fps</option>
+        <option value="60">60 fps</option>
       </select>
     </label>
   
     <label style="margin-left:20px;">Codec:
       <select id="codecSelect">
-        <option>BRaw:3_1</option>
-        <option>BRaw:5_1</option>
-        <option>BRaw:8_1</option>
-        <option>BRaw:12_1</option>
-        <option>BRaw:Q0</option>
-        <option>BRaw:Q1</option>
-        <option>BRaw:Q3</option>
-        <option>BRaw:Q5</option>
+        <option value="BRaw:3_1">Blackmagic RAW 3:1</option>
+        <option value="BRaw:5_1">Blackmagic RAW 5:1</option>
+        <option value="BRaw:8_1">Blackmagic RAW 8:1</option>
+        <option value="BRaw:12_1">Blackmagic RAW 12:1</option>
+        <option value="BRaw:Q0">Blackmagic RAW Q0</option>
+        <option value="BRaw:Q1">Blackmagic RAW Q1</option>
+        <option value="BRaw:Q3">Blackmagic RAW Q3</option>
+        <option value="BRaw:Q5">Blackmagic RAW Q5</option>
       </select>
     </label>
   
     <button id="applyFormatBtn" style="margin-left:20px;">Применить настройки</button>
+
+    <button id="startAllBtn" style="margin-left:20px;">🔴 Rec ALL</button>
+    <button id="stopAllBtn" style="margin-left:10px;">⏹ Stop ALL</button>
   </div>
 
   <div id="cameraControlsContainer">
@@ -559,6 +562,7 @@
               rebuildCameraBlocks();
               initializeMotorDisplays();
               setupGlobalFormatControls();
+              document.getElementById('camerasTabBtn')?.click();
             });
           </script>
     </body>

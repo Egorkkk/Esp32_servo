@@ -9,9 +9,16 @@ let fourthCameraEnabled = true;
 let pingIntervalId = null;
 let timecodeIntervalId = null;
 let localTimecodeIntervalId = null;
+let controlAllCameras = false;
 
 const availableFpsOptions = [24, 25, 30, 50, 60];
 const availableCodecOptions = ['BRaw:3_1', 'BRaw:5_1', 'BRaw:8_1', 'BRaw:12_1', 'BRaw:Q0', 'BRaw:Q1', 'BRaw:Q3', 'BRaw:Q5'];
+
+const irisSteps = [2.5, 2.8, 3.2, 3.5, 4.0, 4.5, 5.0, 5.6, 6.3, 7.1, 8.0, 9.0, 10.0, 11.0, 13.0, 14.0, 16.0, 18.0, 20.0, 22.0];
+const gainSteps = [-12, -6, 0, 6, 12, 18, 24, 30, 36];
+const shutterSteps = [11, 22, 45, 50, 60, 90, 100, 120, 150, 180, 200, 240, 300, 360];
+const whiteBalanceSteps = [2500, 2800, 3000, 3200, 3400, 3600, 4000, 4500, 4800, 5000, 5200, 5400, 5600, 6000, 6500, 7000, 7500, 8000];
+const isoSteps = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600];
 
 // Основная структура хранения состояния всех камер
 const allCameraStates = {};
@@ -65,6 +72,15 @@ function setupGlobalFormatControls() {
             startLocalTimecodeTimer();
         }, 2000);
     };
+    const startAllBtn = document.getElementById('startAllBtn');
+    const stopAllBtn = document.getElementById('stopAllBtn');
+
+    if (startAllBtn) {
+        startAllBtn.onclick = startRecordingAll;
+    }
+    if (stopAllBtn) {
+        stopAllBtn.onclick = stopRecordingAll;
+    }
 }
 
 async function updateAllCamerasFormatCombined(frameRate, codec) {
@@ -108,7 +124,6 @@ async function updateAllCamerasFormatCombined(frameRate, codec) {
 }
 
 initializeCameraStates();
-//setupGlobalFormatControls();
 
 function decodeBCDToFrameCount(bcd, fps) {
     function bcdToDec(b) {
@@ -145,47 +160,103 @@ function startLocalTimecodeTimer() {
         });
     }, 1000 / 25); // обновление 25 раз в секунду
 }
-
-function updateCameraTimecodeInDOM(ip, timecode) {
-    const block = document.querySelector(`.camera-block[data-ip="${ip}"]`);
-    if (!block) return;
-
-    const span = block.querySelector('h3 span');
-    if (!span) return;
-
-    const state = allCameraStates[ip];
-    const baseLabel = state.online ? 'Connected' : 'Not connected';
-    const display = timecode ? `(${baseLabel} — ${timecode})` : `(${baseLabel})`;
-
-    if (span.textContent !== display) {
-        span.textContent = display;
-    }
-}
-
-function pingAll() {
-    cameraIPs.forEach(async (ip) => {
-        const state = allCameraStates[ip];
-        const nowOnline = await pingCamera(ip);
-        state.online = nowOnline;
-
-        const block = document.querySelector(`.camera-block[data-ip="${ip}"]`);
-        if (!block) return;
-
-        const header = block.querySelector('h3 span');
-        if (header) {
-            const tc = state.timecode ? ` — ${state.timecode}` : '';
-            header.textContent = nowOnline ? `(Connected${tc})` : '(Not connected)';
-            header.style.color = nowOnline ? 'green' : 'red';
+/*
+async function pingAll() {
+    cameraIPs.forEach(async ip => {
+        const url = `http://${ip}/control/api/v1/system`;
+        try {
+            const response = await fetch(url);
+            allCameraStates[ip].online = response.status === 204;
+        } catch (err) {
+            allCameraStates[ip].online = false;
         }
 
-        block.classList.toggle('offline', !nowOnline);
-
-        block.querySelectorAll('input, button').forEach(el => {
-            if (el.type === 'range' || el.tagName === 'BUTTON') {
-                el.disabled = !nowOnline;
+        // ⏺️ Проверка состояния записи
+        if (allCameraStates[ip].online) {
+            try {
+                const recResponse = await fetch(`http://${ip}/control/api/v1/transports/0/record`);
+                if (recResponse.ok) {
+                    const data = await recResponse.json();
+                    allCameraStates[ip].recording = data.recording === true;
+                } else {
+                    allCameraStates[ip].recording = false;
+                }
+            } catch (err) {
+                allCameraStates[ip].recording = false;
             }
-        });
+        } else {
+            allCameraStates[ip].recording = false;
+        }
     });
+
+    rebuildCameraBlocks();
+}
+    */
+
+async function pingAll() {
+    for (const ip of cameraIPs) {
+        const state = allCameraStates[ip];
+        const block = document.querySelector(`.camera-block[data-ip="${ip}"]`);
+        if (!block) continue;
+
+        // === Проверка состояния подключения ===
+        try {
+            const systemResp = await fetch(`http://${ip}/control/api/v1/system`);
+            const online = systemResp.status === 204;
+
+            if (state.online !== online) {
+                state.online = online;
+                block.classList.toggle('offline', !online);
+
+                // Обновляем все input и button
+                const controls = block.querySelectorAll('input, button');
+                controls.forEach(el => {
+                    el.disabled = !online;
+                });
+            }
+        } catch {
+            if (state.online) {
+                state.online = false;
+                block.classList.add('offline');
+
+                // Отключаем элементы управления
+                const controls = block.querySelectorAll('input, button');
+                controls.forEach(el => {
+                    el.disabled = true;
+                });
+            }
+        }
+
+        // === Проверка состояния записи ===
+        if (state.online) {
+            try {
+                const recResp = await fetch(`http://${ip}/control/api/v1/transports/0/record`);
+                if (recResp.ok) {
+                    const data = await recResp.json();
+                    const isRecording = data.recording === true;
+                    if (state.recording !== isRecording) {
+                        state.recording = isRecording;
+                        block.classList.toggle('recording', isRecording);
+                    }
+                }
+            } catch {
+                // Не меняем state.recording при ошибке
+            }
+        } else {
+            if (state.recording) {
+                state.recording = false;
+                block.classList.remove('recording');
+            }
+        }
+
+        // === Обновление текста статуса (Connected / Not connected) ===
+        const statusSpan = block.querySelector('h3 span');
+        if (statusSpan) {
+            const baseStatus = state.online ? 'Connected' : 'Not connected';
+            statusSpan.textContent = `(${baseStatus})`;
+            statusSpan.style.color = state.online ? 'green' : 'red';
+        }
+    }
 }
 
 function connectAllCameras() {
@@ -226,18 +297,18 @@ function fetchAllTimecodes() {
     });
 }
 
-function updateCameraTimecodeInDOM(ip, timecode) {
-    const block = document.querySelector(`.camera-block[data-ip="${ip}"]`);
-    if (!block) return;
+function updateCameraTimecodeInDOM(ip, displayTimecode) {
+    const elementId = `timecode-${ip}`;
+    //console.log(`[updateTimecode] IP: ${ip}, Element ID: ${elementId}, Value: ${displayTimecode}`);
 
-    const state = allCameraStates[ip];
-    const header = block.querySelector('h3 span');
-    if (header) {
-        const tc = timecode ? ` — ${timecode}` : '';
-        header.textContent = state.online ? `(Connected${tc})` : '(Not connected)';
+    const tcElement = document.getElementById(elementId);
+    if (tcElement) {
+        tcElement.innerHTML = `<strong>${displayTimecode || '__:__:__:__'}</strong>`;
+        //console.log(`[updateTimecode] ✅ Обновлён DOM элемент #${elementId}`);
+    } else {
+        //console.warn(`[updateTimecode] ❌ Элемент #${elementId} не найден`);
     }
 }
-
 function decodeBCDTimecode(bcd) {
     function bcdToDec(b) {
         return ((b >> 4) * 10 + (b & 0x0F));
@@ -279,11 +350,30 @@ function toggleFourthCamera(enabled) {
     rebuildCameraBlocks();
 }
 
-const irisSteps = [2.0, 2.2, 2.5, 2.8, 3.2, 3.5, 4.0, 4.5, 5.0, 5.6, 6.3, 7.1, 8.0, 9.0, 10.0, 11.0, 13.0, 14.0, 16.0, 18.0, 20.0, 22.0];
-const gainSteps = [-12, -9, -6, -3, 0, 3, 6, 9, 12];
-const shutterSteps = [11, 22, 45, 50, 60, 90, 100, 120, 150, 180, 200, 240, 300, 360];
-const whiteBalanceSteps = [2500, 2800, 3000, 3200, 3400, 3600, 4000, 4500, 4800, 5000, 5200, 5400, 5600, 6000, 6500, 7000, 7500, 8000];
-const isoSteps = [100, 200, 400, 800, 1600, 3200, 6400, 12800];
+function attachStepperHandlers() {
+    const ups = document.querySelectorAll('.stepper-up');
+    const downs = document.querySelectorAll('.stepper-down');
+
+    console.log(`🔍 Найдено ${ups.length} кнопок up, ${downs.length} кнопок down`);
+
+    ups.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const param = btn.dataset.param;
+            const index = parseInt(btn.dataset.index);
+            console.log(`▶ ${param}[${index}] +1`);
+            changeStep(param, index, 1);
+        });
+    });
+
+    downs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const param = btn.dataset.param;
+            const index = parseInt(btn.dataset.index);
+            console.log(`◀ ${param}[${index}] -1`);
+            changeStep(param, index, -1);
+        });
+    });
+}
 
 function rebuildCameraBlocks() {
     const container = document.getElementById('cameraControlsContainer');
@@ -302,9 +392,14 @@ function rebuildCameraBlocks() {
         const statusText = state.online ? 'Connected' : 'Not connected';
         const statusColor = state.online ? 'green' : 'red';
         const timecode = state.timecode ? ` — ${state.timecode}` : '';
+        const timecodeDisplay = state.timecode || '__:__:__:__';
 
         block.innerHTML = `
-            <h3>Камера ${index + 1} <span style="color:${statusColor}; font-weight:normal; font-size:0.8em">(${statusText}${timecode})</span></h3>
+        <h3>
+            Камера ${index + 1} 
+            <span style="color:${statusColor}; font-weight:normal; font-size:0.8em">(${statusText})</span>
+        </h3>
+        <div class="camera-timecode" id="timecode-${ip}"><strong>${timecodeDisplay}</strong></div>
 
             <div class="control-block">
                 <label for="focus-${index}">Focus:</label><br>
@@ -313,9 +408,10 @@ function rebuildCameraBlocks() {
 
             ${buildStepper('Iris', 'iris', irisSteps, index, state.iris, !state.online)}
             ${buildStepper('Gain', 'gain', gainSteps, index, state.gain, !state.online)}
+            ${buildStepper('ISO', 'iso', isoSteps, index, state.iso, !state.online)}
             ${buildStepper('Shutter', 'shutter', shutterSteps, index, state.shutter, !state.online)}
             ${buildStepper('White Balance', 'whitebalance', whiteBalanceSteps, index, state.whiteBalance, !state.online)}
-            ${buildStepper('ISO', 'iso', isoSteps, index, state.iso, !state.online)}
+            
 
             <div class="control-block">
                 <button onclick="startRecording(${index})" ${!state.online ? 'disabled' : ''}>Start Rec</button>
@@ -325,40 +421,97 @@ function rebuildCameraBlocks() {
             <hr>
         `;
         container.appendChild(block);
-    });
-}
 
+        const focusInput = block.querySelector(`#focus-${index}`);
+        if (focusInput) {
+            focusInput.addEventListener('input', () => {
+                const newValue = parseInt(focusInput.value);
+        
+                const targets = controlAllCameras
+                    ? cameraIPs.filter(ip => allCameraStates[ip]?.online)
+                    : [ip];
+        
+                targets.forEach(targetIp => {
+                    allCameraStates[targetIp].focus = newValue;
+                    updateFocus(targetIp, newValue);
+        
+                    const targetIndex = cameraIPs.indexOf(targetIp);
+                    const otherInput = document.getElementById(`focus-${targetIndex}`);
+                    if (otherInput && otherInput !== focusInput) {
+                        otherInput.value = newValue;
+                    }
+                });
+            });
+        }
+    });
+    attachStepperHandlers(); // ← в самом конце rebuildCameraBlocks
+}
 
 function toggleControlMode() {
     controlAll = document.getElementById('controlAllCheckbox').checked;
 }
 
-
-function buildStepper(label, prefix, stepsArray, index, value, disabled) {
-    return `
-        <div class="control-block">
-            <label for="${prefix}-${index}">${label}:</label><br>
-            <button class="${prefix}-down" data-index="${index}" ${disabled ? 'disabled' : ''}>◀</button>
-            <input type="text" id="${prefix}-${index}" value="${value}" readonly style="width:50px; text-align:center;">
-            <button class="${prefix}-up" data-index="${index}" ${disabled ? 'disabled' : ''}>▶</button>
-        </div>
-    `;
+function getStepArrayForParam(paramName) {
+    switch (paramName) {
+        case 'iris': return irisSteps;
+        case 'gain': return gainSteps;
+        case 'shutter': return shutterSteps;
+        case 'whitebalance': return whiteBalanceSteps;
+        case 'iso': return isoSteps;
+        default: return [];
+    }
 }
 
-function changeStep(stepsArray, inputId, direction, ip, paramName) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
+function buildStepper(label, paramName, steps, index, currentValue, disabled) {
+    const value = currentValue ?? steps[0];
 
-    let current = parseFloat(input.value);
-    let index = stepsArray.indexOf(current);
-    if (index === -1) index = 0;
-    index += direction;
-    if (index < 0) index = 0;
-    if (index >= stepsArray.length) index = stepsArray.length - 1;
-    const newValue = stepsArray[index];
-    input.value = newValue;
-    allCameraStates[ip][paramName] = newValue;
-    // Optionally: send change to camera
+    return `
+    <div class="stepper-control">
+      <label>${label}:</label>
+      <button class="stepper-down ${paramName}-down stepper-btn" data-param="${paramName}" data-index="${index}" ${disabled ? 'disabled' : ''}>◀</button>
+      <input type="text" id="${paramName}-${index}" value="${value}" readonly style="width:50px; text-align:center;" ${disabled ? 'disabled' : ''}>
+      <button class="stepper-up ${paramName}-up stepper-btn" data-param="${paramName}" data-index="${index}" ${disabled ? 'disabled' : ''}>▶</button>
+    </div>
+  `;
+}
+
+function changeStep(paramName, index, direction) {
+    const targets = controlAllCameras
+        ? cameraIPs.filter(ip => allCameraStates[ip]?.online)
+        : [cameraIPs[index]];
+
+    targets.forEach(ip => {
+        const state = allCameraStates[ip];
+        const steps = getStepArrayForParam(paramName);
+        const currentValue = state[paramName];
+        const currentIndex = steps.indexOf(currentValue);
+
+        let newIndex = currentIndex + direction;
+        newIndex = Math.max(0, Math.min(steps.length - 1, newIndex));
+        const newValue = steps[newIndex];
+
+        state[paramName] = newValue;
+
+        // Обновить поле в интерфейсе
+        const uiIndex = cameraIPs.indexOf(ip); // нужен для поиска правильного поля
+        const input = document.getElementById(`${paramName}-${uiIndex}`);
+        if (input) {
+            input.value = newValue;
+        }
+
+        // Отправить на камеру
+        if (paramName === 'iris') {
+            updateIris(ip, newValue);
+        } else if (paramName === 'gain') {
+            updateGain(ip, newValue);
+        } else if (paramName === 'shutter') {
+            updateShutter(ip, newValue);
+        } else if (paramName === 'whitebalance') {
+            updateWhiteBalance(ip, newValue);
+        } else if (paramName === 'iso') {
+            updateISO(ip, newValue);
+        }
+    });
 }
 
 async function pingCamera(ip) {
@@ -376,34 +529,285 @@ async function pingCamera(ip) {
 }
 
 async function startRecording(index) {
-    const ip = cameraIPs[index];
-    const url = `http://${ip}/control/api/v1/transports/0/record`;
-    try {
-        const response = await fetch(url, { method: 'POST' });
-        if (response.ok) {
-            allCameraStates[ip].recording = true;
-            rebuildCameraBlocks();
-        } else {
-            console.warn(`Ошибка запуска записи на ${ip}`);
+    const selectedIPs = getTargetIPs(index);
+    for (const ip of selectedIPs) {
+        const url = `http://${ip}/control/api/v1/transports/0/record`;
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recording: true })
+            });
+            if (response.ok) {
+                allCameraStates[ip].recording = true;
+                rebuildCameraBlocks();
+            } else {
+                console.warn(`Ошибка запуска записи на ${ip}: статус ${response.status}`);
+            }
+        } catch (err) {
+            console.error(`Ошибка соединения при запуске записи на ${ip}:`, err);
         }
-    } catch (err) {
-        console.error(`Ошибка сети при запуске записи на ${ip}:`, err);
     }
 }
 
 async function stopRecording(index) {
-    const ip = cameraIPs[index];
-    const url = `http://${ip}/control/api/v1/transports/0/stop`;
+    const selectedIPs = getTargetIPs(index);
+    for (const ip of selectedIPs) {
+        const url = `http://${ip}/control/api/v1/transports/0/record`;
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recording: false })
+            });
+            if (response.ok) {
+                allCameraStates[ip].recording = false;
+                rebuildCameraBlocks();
+            } else {
+                console.warn(`Ошибка остановки записи на ${ip}: статус ${response.status}`);
+            }
+        } catch (err) {
+            console.error(`Ошибка соединения при остановке записи на ${ip}:`, err);
+        }
+    }
+}
+
+async function updateRecordingState(ip, state) {
+    const url = `http://${ip}/control/api/v1/transports/0/record`;
     try {
-        const response = await fetch(url, { method: 'POST' });
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recording: state })
+        });
         if (response.ok) {
-            allCameraStates[ip].recording = false;
+            allCameraStates[ip].recording = state;
             rebuildCameraBlocks();
         } else {
-            console.warn(`Ошибка остановки записи на ${ip}`);
+            console.warn(`Не удалось обновить запись на ${ip}: статус ${response.status}`);
         }
     } catch (err) {
-        console.error(`Ошибка сети при остановке записи на ${ip}:`, err);
+        console.error(`Ошибка обновления записи на ${ip}:`, err);
+    }
+}
+
+function startRecordingAll() {
+    cameraIPs.forEach(ip => {
+        if (allCameraStates[ip]?.online) {
+            updateRecordingState(ip, true);
+        }
+    });
+}
+
+function stopRecordingAll() {
+    cameraIPs.forEach(ip => {
+        if (allCameraStates[ip]?.online) {
+            updateRecordingState(ip, false);
+        }
+    });
+}
+
+async function updateIris(ip, value) {
+    const url = `http://${ip}/control/api/v1/lens/iris`;
+    try {
+        const response = await fetch(url, {
+            method: 'PUT', // <-- ВАЖНО
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ apertureStop: value })
+        });
+        if (!response.ok) {
+            console.warn(`Не удалось обновить iris на ${ip}: статус ${response.status}`);
+        }
+    } catch (err) {
+        console.error(`Ошибка при обновлении iris на ${ip}:`, err);
+    }
+}
+
+function shutterAngleToSpeedValue(angle, fps) {
+    const allowedSpeeds = [25, 30, 50, 60, 100, 125, 200, 250, 500, 1000, 2000];
+
+    // Вычисляем фактическую выдержку в секундах
+    const targetShutterTime = (angle / 360) / fps;
+
+    // Фильтруем те выдержки, которые допустимы (N >= fps)
+    const validSpeeds = allowedSpeeds.filter(n => n >= fps);
+
+    // Находим ближайшее значение
+    let bestMatch = validSpeeds[0];
+    let smallestDiff = Math.abs((1 / bestMatch) - targetShutterTime);
+
+    for (let i = 1; i < validSpeeds.length; i++) {
+        const n = validSpeeds[i];
+        const diff = Math.abs((1 / n) - targetShutterTime);
+        if (diff < smallestDiff) {
+            smallestDiff = diff;
+            bestMatch = n;
+        }
+    }
+
+    return bestMatch; // Например, 50 означает 1/50
+}
+
+async function updateShutter(ip, angle) {
+    const fps = allCameraStates[ip].fps || 25; // fallback
+    const speedValue = shutterAngleToSpeedValue(angle, fps); // например, 50
+    const url = `http://${ip}/control/api/v1/video/shutter`;
+
+    console.log(`[${ip}] shutter angle ${angle}° → 1/${speedValue} sec (fps: ${fps})`);
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ shutterSpeed: speedValue })
+        });
+        if (!response.ok) {
+            console.warn(`Не удалось обновить shutter на ${ip}: статус ${response.status}`);
+        }
+    } catch (err) {
+        console.error(`Ошибка при обновлении shutter на ${ip}:`, err);
+    }
+}
+
+async function updateGain(ip, value) {
+    const url = `http://${ip}/control/api/v1/video/gain`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gain: value })
+        });
+
+        if (response.ok) {
+            allCameraStates[ip].gain = value;
+            const iso = gainToIso(value);
+            allCameraStates[ip].iso = iso;
+
+            // Обновим поле ISO в интерфейсе
+            const index = cameraIPs.indexOf(ip);
+            const isoInput = document.getElementById(`iso-${index}`);
+            if (isoInput) {
+                isoInput.value = iso;
+            }
+
+            console.log(`[${ip}] Gain set to ${value}, ISO updated to ${iso}`);
+        } else {
+            console.warn(`Не удалось обновить gain на ${ip}: статус ${response.status}`);
+        }
+    } catch (err) {
+        console.error(`Ошибка при обновлении gain на ${ip}:`, err);
+    }
+}
+
+function isoToGain(iso) {
+    const map = {
+        100: -12, 200: -6, 400: 0, 800: 6,
+        1600: 12, 3200: 18, 6400: 24,
+        12800: 30, 25600: 36
+    };
+    return map[iso];
+}
+
+function gainToIso(gain) {
+    const reverseMap = {
+        '-12': 100, '-6': 200, '0': 400, '6': 800,
+        '12': 1600, '18': 3200, '24': 6400,
+        '30': 12800, '36': 25600
+    };
+    return reverseMap[gain] || 400;
+}
+
+async function updateISO(ip, isoValue) {
+    const gainValue = isoToGain(isoValue);
+    if (gainValue === undefined) return;
+
+    const url = `http://${ip}/control/api/v1/video/gain`;
+
+    console.log(`[${ip}] ISO ${isoValue} → gain ${gainValue}`);
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gain: gainValue })
+        });
+
+        if (response.ok) {
+            allCameraStates[ip].iso = isoValue;
+            allCameraStates[ip].gain = gainValue;
+
+            const index = cameraIPs.indexOf(ip);
+
+            // Обновить поле ISO
+            const isoInput = document.getElementById(`iso-${index}`);
+            if (isoInput) {
+                isoInput.value = isoValue;
+            }
+
+            // Обновить поле Gain
+            const gainInput = document.getElementById(`gain-${index}`);
+            if (gainInput) {
+                gainInput.value = gainValue;
+            }
+
+        } else {
+            console.warn(`Не удалось обновить ISO на ${ip}`);
+        }
+    } catch (err) {
+        console.error(`Ошибка при обновлении ISO на ${ip}:`, err);
+    }
+}
+
+async function updateWhiteBalance(ip, value) {
+    const url = `http://${ip}/control/api/v1/video/whiteBalance`;
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ whiteBalance: value })
+        });
+        if (!response.ok) {
+            console.warn(`Не удалось обновить whiteBalance на ${ip}: статус ${response.status}`);
+        }
+    } catch (err) {
+        console.error(`Ошибка при обновлении whiteBalance на ${ip}:`, err);
+    }
+}
+
+async function updateFocus(ip, value) {
+    const normalized = value / 100;
+    const url = `http://${ip}/control/api/v1/lens/focus`;
+
+    //console.log(`[${ip}] Focus slider: ${value} → normalized: ${normalized.toFixed(4)}`);
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ normalised: normalized })
+        });
+        if (!response.ok) {
+            console.warn(`Не удалось обновить фокус на ${ip}: статус ${response.status}`);
+        }
+    } catch (err) {
+        console.error(`Ошибка при обновлении фокуса на ${ip}:`, err);
+    }
+}
+
+function toggleControlMode() {
+    const checkbox = document.getElementById('controlAllCheckbox');
+    controlAllCameras = checkbox.checked;
+}
+
+function getTargetIPs(index) {
+    if (controlAllCameras) {
+        return cameraIPs.filter(ip => allCameraStates[ip]?.online);
+    } else {
+        const ip = cameraIPs[index];
+        return allCameraStates[ip]?.online ? [ip] : [];
     }
 }
 
