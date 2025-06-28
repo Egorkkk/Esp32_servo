@@ -31,7 +31,7 @@ static AsyncWebServer server(80);
 
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-const char* ssid = "Robocast2.4G";
+const char* ssid = "Motobacks";
 const char* password = "1008121982";
 IPAddress local_IP(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
