@@ -34,7 +34,7 @@ static AsyncWebServer server(80);
 const char* ssid = "Motobacks";
 const char* password = "1008121982";
 IPAddress local_IP(192, 168, 0, 200);
-IPAddress gateway(192, 168, 0, 1);
+IPAddress gateway(192, 168, 0, 3);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress primaryDNS(8, 8, 8, 8);   //optional
 IPAddress secondaryDNS(8, 8, 4, 4); //optional
