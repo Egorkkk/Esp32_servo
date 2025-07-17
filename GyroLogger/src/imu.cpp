@@ -17,13 +17,15 @@ bool initIMU(SPIClass &spi) {
   digitalWrite(IMU_RST_PIN, HIGH);
   delay(100);
 
-  if (!imu.beginSPI(IMU_CS_PIN, IMU_WAK_PIN, IMU_INT_PIN, IMU_RST_PIN, 1000000, spi)) {
+  if (!imu.beginSPI(IMU_CS_PIN, IMU_WAK_PIN, IMU_INT_PIN, IMU_RST_PIN, 2000000, spi)) {
     Serial.println("[IMU] ❌ IMU init failed!");
     return false;
   }
 
   Serial.println("[IMU] ✅ IMU initialized.");
-  imu.enableRotationVector(50);  // 20Hz
+  imu.enableRotationVector(10);   // Кватернионы
+  imu.enableGyro(10);             // Гироскоп
+  imu.enableAccelerometer(10);    // Акселерометр
   return true;
 }
 

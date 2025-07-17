@@ -4,6 +4,7 @@
 #include "sdcard.h"
 #include "gps.h"
 #include "logger.h"
+#include "buttons.h"
 
 #define SPI_MOSI 11
 #define SPI_MISO 13
@@ -49,6 +50,9 @@ void setup() {
     while (1);
   }
 
+  setupButtons();
+
+
   Serial.println("[MAIN] ✅ System initialized.");
 }
 
@@ -56,28 +60,34 @@ void loop() {
   static unsigned long lastSample = 0;
   static unsigned long lastFlush = 0;
 
-  if (millis() - lastSample >= 100) {
+  handleButtons();
+  handleGPS(); 
+
+  if (millis() - lastSample >= 10) {
     lastSample = millis();
 
-    double timestamp;
-    if (!getGPSTimestamp(timestamp)) {
-      timestamp = millis() / 1000.0; // fallback
+    IMUData sample;
+
+    if (!readIMU(sample)) {
+      Serial.println("[IMU] No new IMU data");
+      return;
     }
 
-    IMUData sample;
-    sample.timestamp = timestamp;
-    sample.qw = imu.getQuatReal();
-    sample.qx = imu.getQuatI();
-    sample.qy = imu.getQuatJ();
-    sample.qz = imu.getQuatK();
-    sample.gyroX = imu.getGyroX();
-    sample.gyroY = imu.getGyroY();
-    sample.gyroZ = imu.getGyroZ();
-    sample.accelX = imu.getAccelX();
-    sample.accelY = imu.getAccelY();
-    sample.accelZ = imu.getAccelZ();
+    // Время по GPS или fallback
+    if (!getGPSTimestamp(sample.timestamp)) {
+      sample.timestamp = millis() / 1000.0;
+    }
 
-   // 👉 Отладочный вывод
+    if (gps.location.isValid()) {
+      sample.latitude = gps.location.lat();
+      sample.longitude = gps.location.lng();
+    }
+
+    if (gps.altitude.isValid()) {
+      sample.altitude = gps.altitude.meters();
+    }
+
+    // 👉 Отладочный вывод
     Serial.printf("[IMU] t=%.3f  q=(%.2f, %.2f, %.2f, %.2f)  g=(%.2f, %.2f, %.2f)  a=(%.2f, %.2f, %.2f)\n",
                   sample.timestamp,
                   sample.qw, sample.qx, sample.qy, sample.qz,
@@ -87,11 +97,9 @@ void loop() {
     logIMUData(sample);
   }
 
-  if (millis() - lastFlush >= 100) {
-    Serial.println("[LOGGER] Flushing...");
+  if (millis() - lastFlush >= 1000) {
     lastFlush = millis();
     flushLogger();
   }
 
-//  handleGPS();
 }

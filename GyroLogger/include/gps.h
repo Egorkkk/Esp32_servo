@@ -1,4 +1,7 @@
 #pragma once
+#include <TinyGPSPlus.h>
+
+extern TinyGPSPlus gps; 
 
 bool initGPS();
 void handleGPS();

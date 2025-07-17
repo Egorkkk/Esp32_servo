@@ -52,19 +52,28 @@ void handleGPS() {
 }
 
 bool getGPSTimestamp(double& timestamp_out) {
-  if (!gps.time.isValid() || !gps.date.isValid()) return false;
+  Serial.println("[GPS] Checking GPS timestamp validity...");
+  if (!gps.time.isValid() || !gps.date.isValid()) {
+    static bool warned = false;
+    if (!warned) {
+      Serial.println("[GPS] ⚠ GPS time not yet valid, using millis()");
+      warned = true;
+    }
+    return false;
+  }
 
-  tm timeinfo;
-  timeinfo.tm_year = gps.date.year() - 1900;
-  timeinfo.tm_mon  = gps.date.month() - 1;
-  timeinfo.tm_mday = gps.date.day();
-  timeinfo.tm_hour = gps.time.hour();
-  timeinfo.tm_min  = gps.time.minute();
-  timeinfo.tm_sec  = gps.time.second();
-  time_t unix_time = mktime(&timeinfo);
+  // Переводим время в секунды с начала суток (UTC)
+  timestamp_out =
+      gps.time.hour() * 3600.0 +
+      gps.time.minute() * 60.0 +
+      gps.time.second() +
+      gps.time.centisecond() / 100.0;
 
-  double millis = gps.time.centisecond() * 10.0;
-  timestamp_out = (double)unix_time + millis / 1000.0;
+  static bool confirmed = false;
+  if (!confirmed) {
+    Serial.println("[GPS] ✅ GPS time is now valid and used for timestamps");
+    confirmed = true;
+  }
 
   return true;
 }

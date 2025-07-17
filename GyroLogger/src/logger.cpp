@@ -27,7 +27,7 @@ bool initLogger(SPIClass& spi) {
     return false;
   }
 
-  logFile.println("timestamp,quat_w,quat_x,quat_y,quat_z,gyro_x,gyro_y,gyro_z,accel_x,accel_y,accel_z");
+  logFile.println("timestamp,quat_w,quat_x,quat_y,quat_z,gyro_x,gyro_y,gyro_z,accel_x,accel_y,accel_z,lat,lon,alt");
   logFile.flush();
 
   Serial.printf("[LOGGER] ✅ Logging to %s\n", filename);
@@ -59,10 +59,11 @@ void flushLogger() {
 
   for (size_t i = 0; i < bufferIndex; i++) {
     const IMUData& d = buffer[i];
-    logFile.printf("%.3f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n",
+    logFile.printf("%.3f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.2f\n",
       d.timestamp, d.qw, d.qx, d.qy, d.qz,
       d.gyroX, d.gyroY, d.gyroZ,
-      d.accelX, d.accelY, d.accelZ);
+      d.accelX, d.accelY, d.accelZ,
+      d.latitude, d.longitude, d.altitude);
   }
 
   logFile.flush();
