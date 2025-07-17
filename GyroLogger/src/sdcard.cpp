@@ -1,21 +1,34 @@
 #include "sdcard.h"
-#include <SPI.h>
 #include <SD.h>
 
-// Новые пины SPI под ESP32-S3
-#define SD_CS_PIN    10
-#define SD_MOSI_PIN  11
-#define SD_MISO_PIN  13
-#define SD_SCK_PIN   12
+// CS пин больше не фиксируем здесь, он передаётся через аргумент
+// #define SD_CS_PIN 7 — убрано
 
-void initSDCard() {
-  // Инициализация SPI на пользовательских пинах
-  SPI.begin(SD_SCK_PIN, SD_MISO_PIN, SD_MOSI_PIN, SD_CS_PIN);
+bool initSDCard(SPIClass &spi) {
+  const uint8_t SD_CS_PIN = 39;  // явно задали тот, что указан в main.cpp
 
-  if (!SD.begin(SD_CS_PIN)) {
-    Serial.println("SD card init failed!");
-    while (1) delay(10);
-  } else {
-    Serial.println("SD card initialized.");
+  Serial.println("[SD] Starting SD card init...");
+  pinMode(SD_CS_PIN, OUTPUT);
+  digitalWrite(SD_CS_PIN, HIGH);
+  delay(100);
+
+  // spi.begin() должен быть вызван в main, повторно здесь не нужно
+
+  if (!SD.begin(SD_CS_PIN, spi, 3000000)) {
+    Serial.println("[SD] ❌ SD card init failed!");
+    return false;
   }
+
+  Serial.println("[SD] ✅ SD card initialized.");
+
+  File testFile = SD.open("/test.txt", FILE_WRITE);
+  if (testFile) {
+    testFile.println("SD test OK");
+    testFile.close();
+    Serial.println("[SD] Test file written.");
+  } else {
+    Serial.println("[SD] ❌ Failed to write test file.");
+  }
+
+  return true;
 }

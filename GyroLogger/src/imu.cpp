@@ -1,20 +1,48 @@
 #include "imu.h"
-#include <Adafruit_BNO08x.h>
-#include <Wire.h>
 
-// I2C на свободных пинах ESP32-S3
-#define I2C_SDA 8
-#define I2C_SCL 9
+#define IMU_CS_PIN   9
+#define IMU_RST_PIN  8
+#define IMU_INT_PIN  10
+#define IMU_WAK_PIN  47
 
-Adafruit_BNO08x bno08x;
+BNO080 imu;
 
-void initIMU() {
-  Wire.begin(I2C_SDA, I2C_SCL);
+bool initIMU(SPIClass &spi) {
+  pinMode(IMU_CS_PIN, OUTPUT);
+  digitalWrite(IMU_CS_PIN, HIGH);
 
-  if (!bno08x.begin_I2C()) {
-    Serial.println("BNO080 not detected!");
-    while (1) delay(10);
-  } else {
-    Serial.println("BNO080 initialized.");
+  pinMode(IMU_RST_PIN, OUTPUT);
+  digitalWrite(IMU_RST_PIN, LOW);
+  delay(10);
+  digitalWrite(IMU_RST_PIN, HIGH);
+  delay(100);
+
+  if (!imu.beginSPI(IMU_CS_PIN, IMU_WAK_PIN, IMU_INT_PIN, IMU_RST_PIN, 1000000, spi)) {
+    Serial.println("[IMU] ❌ IMU init failed!");
+    return false;
   }
+
+  Serial.println("[IMU] ✅ IMU initialized.");
+  imu.enableRotationVector(50);  // 20Hz
+  return true;
 }
+
+bool readIMU(IMUData& out) {
+  if (!imu.dataAvailable()) return false;
+
+  out.qw = imu.getQuatReal();
+  out.qx = imu.getQuatI();
+  out.qy = imu.getQuatJ();
+  out.qz = imu.getQuatK();
+
+  out.gyroX = imu.getGyroX();
+  out.gyroY = imu.getGyroY();
+  out.gyroZ = imu.getGyroZ();
+
+  out.accelX = imu.getAccelX();
+  out.accelY = imu.getAccelY();
+  out.accelZ = imu.getAccelZ();
+
+  return true;
+}
+

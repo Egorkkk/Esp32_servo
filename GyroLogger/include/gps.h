@@ -1,3 +1,5 @@
 #pragma once
 
-void initGPS();
+bool initGPS();
+void handleGPS();
+bool getGPSTimestamp(double& timestamp_out);

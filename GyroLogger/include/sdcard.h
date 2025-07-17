@@ -1,3 +1,4 @@
 #pragma once
+#include <SPI.h>
 
-void initSDCard();
+bool initSDCard(SPIClass &spi);
