@@ -6,9 +6,15 @@
 static File logFile;
 static IMUData buffer[MAX_BUFFER_SIZE];
 static size_t bufferIndex = 0;
+static bool isLoggingFlag = false;
 
-bool initLogger(SPIClass& spi) {
+bool startLogger(SPIClass& spi) {
   const uint8_t SD_CS_PIN = 47;  // тот же, что в main и sdcard.cpp
+
+  if (isLoggingFlag) {
+    Serial.println("[LOGGER] ⚠ Already logging");
+    return true;
+  }
 
   if (!SD.begin(SD_CS_PIN, spi)) {
     Serial.println("[LOGGER] ❌ SD init failed");
@@ -31,7 +37,22 @@ bool initLogger(SPIClass& spi) {
   logFile.flush();
 
   Serial.printf("[LOGGER] ✅ Logging to %s\n", filename);
+  bufferIndex = 0;
+  isLoggingFlag = true;
   return true;
+}
+
+void stopLogger() {
+  if (logFile) {
+    flushLogger();
+    logFile.close();
+    Serial.println("[LOGGER] 🛑 Logging stopped.");
+  }
+  isLoggingFlag = false;
+}
+
+bool isLogging() {
+  return isLoggingFlag;
 }
 
 void logIMUData(const IMUData& data) {

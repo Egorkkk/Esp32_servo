@@ -2,12 +2,14 @@
 #include <Arduino.h>
 #include <Bounce2.h>
 
-#define PIN_BTN_START 0
-#define PIN_BTN_STOP  1
+#define PIN_BTN_START 20
+#define PIN_BTN_STOP  21
 
 static Bounce startButton = Bounce();
 static Bounce stopButton  = Bounce();
 static bool isLogging = false;
+static bool startRequested = false;
+static bool stopRequested  = false;
 
 void setupButtons() {
   pinMode(PIN_BTN_START, INPUT_PULLUP);
@@ -25,18 +27,26 @@ void handleButtons() {
   stopButton.update();
 
   if (startButton.fell()) {
-    isLogging = true;
+    startRequested = true;
   }
 
   if (stopButton.fell()) {
-    isLogging = false;
+    stopRequested = true;
   }
 }
 
-bool isLoggingActive() {
-  return isLogging;
+bool shouldStartLogging() {
+  if (startRequested) {
+    startRequested = false;
+    return true;
+  }
+  return false;
 }
 
-void resetLoggingState() {
-  isLogging = false;
+bool shouldStopLogging() {
+  if (stopRequested) {
+    stopRequested = false;
+    return true;
+  }
+  return false;
 }
