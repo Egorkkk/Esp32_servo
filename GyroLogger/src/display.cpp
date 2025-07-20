@@ -57,7 +57,7 @@ void clearDisplay() {
   currentLine = 0;
 }
 
-void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigned long logDurationSec) {
+void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigned long logDurationSec, float batteryVoltage) {
   display.clearDisplay();
   display.setCursor(0, 0);
 
@@ -84,5 +84,12 @@ void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigne
     display.println("IDLE");
   }
 
+  // 👇 Вот здесь всё ок теперь
+  char buf2[16];
+  snprintf(buf2, sizeof(buf2), "Battery: %.2f V", batteryVoltage);
+  display.setCursor(0, 56); // Нижняя строка
+  display.println(buf2);
+
   display.display();
 }
+

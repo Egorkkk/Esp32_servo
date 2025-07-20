@@ -1,0 +1,39 @@
+GyroLogger pins:
+
+SD Card:
+CS -   39 - WHITE
+SCK -  36 - VIOLET
+MOSI - 35 - ORANGE
+MISO - 37 - GRAY
+VCC -  5V
+
+OLED:
+SDA -  42 - YELLOW
+SCL -  41 - BLUE
+VCC -  3.3V
+
+GPS:
+TX -   16 - BLUE
+RX -   17 - GREEN
+VCC -  5V
+
+BNO080:
+CS -   9 -  YELLOW
+SCK -  12 - VIOLET
+MOSI - 11 - ORANGE
+MISO - 13 - GRAY
+INT -  10 - WHITE
+RST -  8 -  GREEN
+VCC -  3.3V
+
+BUTTONS:
+20
+21
+2
+3
+5
+6
+
+
+ADC:
+4

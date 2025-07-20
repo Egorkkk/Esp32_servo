@@ -6,6 +6,7 @@
 #include "logger.h"
 #include "buttons.h"
 #include "display.h"
+#include "battery.h"
 
 #define SPI_MOSI 11
 #define SPI_MISO 13
@@ -58,6 +59,8 @@ void setup() {
   setupButtons();
   showInitStatus("Buttons", true);
 
+  setupBatteryMonitor();  
+
   Serial.println("[MAIN] ✅ System initialized.");
   showInitStatus("System", true);
 }
@@ -77,34 +80,33 @@ void loop() {
     logStartMillis = millis(); // начинаем отсчёт времени записи
   }
 }
-if (shouldStopLogging()) {
-  stopLogger();
-}
 
   if (shouldStopLogging()) {
     stopLogger();
   }
 
   // 👉 Обновление дисплея раз в секунду
-if (millis() - lastDisplayUpdate >= 1000) {
-  lastDisplayUpdate = millis();
+  if (millis() - lastDisplayUpdate >= 1000) {
+    lastDisplayUpdate = millis();
 
-  bool gpsHasTime = gps.date.isValid() &&
-                    gps.time.isValid() &&
-                    (gps.time.hour() > 0 || gps.time.minute() > 0 || gps.time.second() > 0);
+    bool gpsHasTime = gps.date.isValid() &&
+                      gps.time.isValid() &&
+                      (gps.time.hour() > 0 || gps.time.minute() > 0 || gps.time.second() > 0);
 
-  double gpsTime = 0.0;
-  if (gpsHasTime) {
-    gpsTime = gps.time.hour() * 3600 + gps.time.minute() * 60 + gps.time.second();
+    double gpsTime = 0.0;
+    if (gpsHasTime) {
+      gpsTime = gps.time.hour() * 3600 + gps.time.minute() * 60 + gps.time.second();
+    }
+
+    unsigned long logDurationSec = 0;
+    if (isLogging()) {
+      logDurationSec = (millis() - logStartMillis) / 1000;
+    }
+
+
+    float voltage = getBatteryVoltage();
+    updateStatusScreen(gpsHasTime, gpsTime, isLogging(), logDurationSec, voltage);
   }
-
-  unsigned long logDurationSec = 0;
-  if (isLogging()) {
-    logDurationSec = (millis() - logStartMillis) / 1000;
-  }
-
-  updateStatusScreen(gpsHasTime, gpsTime, isLogging(), logDurationSec);
-}
 
   // 👉 Логирование данных только если логгер активен
   if (isLogging() && millis() - lastSample >= 10) {
