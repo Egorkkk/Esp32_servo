@@ -7,6 +7,7 @@
 #include "buttons.h"
 #include "display.h"
 #include "battery.h"
+#include "led.h"
 
 #define SPI_MOSI 11
 #define SPI_MISO 13
@@ -30,6 +31,8 @@ void setup() {
 
   setupDisplay();        // 🟢 Обязательно первым, чтобы дисплей был готов
   showMessage("Boot..."); // Пишем на экран
+
+  setupLED();
 
   sharedSPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
 
@@ -106,6 +109,9 @@ void loop() {
 
     float voltage = getBatteryVoltage();
     updateStatusScreen(gpsHasTime, gpsTime, isLogging(), logDurationSec, voltage);
+
+
+    
   }
 
   // 👉 Логирование данных только если логгер активен
