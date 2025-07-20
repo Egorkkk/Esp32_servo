@@ -3,7 +3,7 @@
 #define IMU_CS_PIN   9
 #define IMU_RST_PIN  8
 #define IMU_INT_PIN  10
-#define IMU_WAK_PIN  47
+#define IMU_WAK_PIN  46
 
 BNO080 imu;
 
@@ -48,3 +48,23 @@ bool readIMU(IMUData& out) {
   return true;
 }
 
+
+void resetIMU(SPIClass &spi) {
+  Serial.println("[IMU] 🔄 Resetting IMU...");
+
+  digitalWrite(IMU_RST_PIN, LOW);
+  delay(10);
+  digitalWrite(IMU_RST_PIN, HIGH);
+  delay(100);
+
+  if (!imu.beginSPI(IMU_CS_PIN, IMU_WAK_PIN, IMU_INT_PIN, IMU_RST_PIN, 2000000, spi)) {
+    Serial.println("[IMU] ❌ Failed to re-init IMU after reset");
+    return;
+  }
+
+  imu.enableRotationVector(10);
+  imu.enableGyro(10);
+  imu.enableAccelerometer(10);
+
+  Serial.println("[IMU] ✅ IMU reinitialized successfully");
+}

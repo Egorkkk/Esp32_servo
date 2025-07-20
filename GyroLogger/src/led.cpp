@@ -1,7 +1,7 @@
 #include "led.h"
 #include <Adafruit_NeoPixel.h>
 
-#define LED_PIN 38
+#define LED_PIN 48
 #define NUM_LEDS 1
 
 static Adafruit_NeoPixel led(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -49,13 +49,11 @@ void tickLED() {
       break;
 
     case LEDState::RECORDING:
-      // плавная пульсация красным (sinusoidal)
-      pulsePhase += 0.05;
-      if (pulsePhase > 2 * PI) pulsePhase -= 2 * PI;
-      {
-        float brightness = (sin(pulsePhase) + 1.0) / 2.0;  // 0.0 – 1.0
-        uint8_t value = (uint8_t)(brightness * 255);
-        setLEDColor(value, 0, 0);
+      if (now - lastUpdate >= 500) {
+        lastUpdate = now;
+        ledOn = !ledOn;
+        // Оранжевый — красный + зелёный
+        setLEDColor(ledOn ? 255 : 0, ledOn ? 100 : 0, 0);
       }
       break;
 
@@ -63,7 +61,7 @@ void tickLED() {
       if (now - lastUpdate >= 1000) {
         lastUpdate = now;
         ledOn = !ledOn;
-        setLEDColor(0, 0, ledOn ? 255 : 0);  // мигаем синим
+        setLEDColor(ledOn ? 0 : 0, ledOn ? 255 : 0, ledOn ? 0 : 255); // мигаем попеременно зелёным и синим
       }
       break;
 

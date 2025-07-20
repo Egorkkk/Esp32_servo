@@ -20,6 +20,7 @@ extern BNO080 imu;
 
 bool initIMU(SPIClass &spi);
 bool readIMU(IMUData &out);
+void resetIMU(SPIClass &spi);
 
 
 #endif

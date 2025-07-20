@@ -73,22 +73,23 @@ void loop() {
   static unsigned long lastFlush = 0;
   static unsigned long lastDisplayUpdate = 0;
   static unsigned long logStartMillis = 0;
+  static int imuFailCount = 0;
 
   handleButtons();
   handleGPS();
 
   // Обработка команд от кнопок
   if (shouldStartLogging()) {
-  if (startLogger(sdSPI)) {
-    logStartMillis = millis(); // начинаем отсчёт времени записи
+    if (startLogger(sdSPI)) {
+      logStartMillis = millis(); // начинаем отсчёт времени записи
+    }
   }
-}
 
   if (shouldStopLogging()) {
     stopLogger();
   }
 
-  // 👉 Обновление дисплея раз в секунду
+  // 👉 Обновление дисплея и светодиода раз в секунду
   if (millis() - lastDisplayUpdate >= 1000) {
     lastDisplayUpdate = millis();
 
@@ -106,12 +107,32 @@ void loop() {
       logDurationSec = (millis() - logStartMillis) / 1000;
     }
 
-
     float voltage = getBatteryVoltage();
+
+    // 👉 Обновление экрана
     updateStatusScreen(gpsHasTime, gpsTime, isLogging(), logDurationSec, voltage);
 
+    // 👉 Обновление состояния светодиода
+    static bool initFailed = false;  // или сделай флаг глобальным, если у тебя он есть
+    if (!initFailed) {
+      // Можно, например, выставлять флаг `initFailed = true;` в setup(), если что-то пошло не так
+    }
 
-    
+    const float LOW_BATTERY_THRESHOLD = 3.3;  // например
+
+    if (initFailed) {
+      updateLEDState(LEDState::INIT_ERROR);
+    } else if (voltage < LOW_BATTERY_THRESHOLD) {
+      updateLEDState(LEDState::LOW_BATTERY);
+    } else if (isLogging()) {
+      updateLEDState(LEDState::RECORDING);
+    } else if (gpsHasTime) {
+      updateLEDState(LEDState::GPS_OK);
+    } else {
+      updateLEDState(LEDState::OK_IDLE);
+    }
+
+    tickLED();  // вызываем светодиодный эффект
   }
 
   // 👉 Логирование данных только если логгер активен
@@ -122,6 +143,14 @@ void loop() {
 
     if (!readIMU(sample)) {
       Serial.println("[IMU] No new IMU data");
+
+    const int IMU_FAIL_THRESHOLD = 50;
+    if (imuFailCount >= IMU_FAIL_THRESHOLD) {
+      Serial.println("[IMU] ⚠ Too many failures, resetting IMU...");
+      resetIMU(sharedSPI);  // 🔁 перезапуск
+      imuFailCount = 0;
+    }
+
       return;
     }
 
@@ -139,7 +168,6 @@ void loop() {
       sample.altitude = gps.altitude.meters();
     }
 
-    // 👉 Отладочный вывод
     Serial.printf("[IMU] t=%.3f  q=(%.2f, %.2f, %.2f, %.2f)  g=(%.2f, %.2f, %.2f)  a=(%.2f, %.2f, %.2f)\n",
                   sample.timestamp,
                   sample.qw, sample.qx, sample.qy, sample.qz,
