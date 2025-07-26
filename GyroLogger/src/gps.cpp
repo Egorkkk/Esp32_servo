@@ -6,6 +6,9 @@
 HardwareSerial gpsSerial(1);
 TinyGPSPlus gps;
 
+// Отслеживаем момент последнего валидного времени
+static unsigned long lastValidTimeUpdate = 0;
+
 bool initGPS() {
   gpsSerial.begin(9600, SERIAL_8N1, 16, 17);
   Serial.println("[GPS] Initialized.");
@@ -16,6 +19,11 @@ void handleGPS() {
   while (gpsSerial.available()) {
     char c = gpsSerial.read();
     gps.encode(c);
+
+    // Если время действительно обновилось и свежее — обновляем счётчик
+    if (gps.time.isUpdated() && gps.time.isValid() && gps.time.age() < 1000) {
+      lastValidTimeUpdate = millis();
+    }
   }
 
   static unsigned long lastPrint = 0;
@@ -48,7 +56,14 @@ void handleGPS() {
     }
 
     Serial.println("--- END ---\n");
+    Serial.printf("[GPS] ⏱ Time since last VALID TIME update: %lu ms\n", millis() - lastValidTimeUpdate);
   }
+}
+
+bool isGPSLost(unsigned long timeoutMs) {
+  unsigned long elapsed = millis() - lastValidTimeUpdate;
+  //Serial.printf("[GPS] ⏱ Time since last VALID TIME update: %lu ms\n", elapsed);
+  return elapsed > timeoutMs;
 }
 
 bool getGPSTimestamp(double& timestamp_out) {

@@ -57,11 +57,12 @@ void clearDisplay() {
   currentLine = 0;
 }
 
-void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigned long logDurationSec, float batteryVoltage) {
+void updateStatusScreen(bool gpsValid, double gpsTime, bool isLogging, unsigned long logDurationSec, float batteryVoltage, const char* canStatusStr) {
+  
   display.clearDisplay();
   display.setCursor(0, 0);
 
-  if (gpsHasTime) {
+  if (gpsValid) {
     display.println("GPS: OK");
 
     int hours = int(gpsTime / 3600) % 24;
@@ -71,7 +72,8 @@ void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigne
     snprintf(buf, sizeof(buf), "T: %02d:%02d:%02d", hours, minutes, seconds);
     display.println(buf);
   } else {
-    display.println("GPS: WAIT...");
+    // 👇 Изменено здесь
+    display.println("GPS: LOST");
     display.println("T: --:--:--");
   }
 
@@ -84,7 +86,13 @@ void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigne
     display.println("IDLE");
   }
 
-  // 👇 Вот здесь всё ок теперь
+  if (canStatusStr) {
+    display.println(canStatusStr);
+  } else {
+    display.println("CAN: ---");
+  }
+
+
   char buf2[16];
   snprintf(buf2, sizeof(buf2), "Battery: %.2f V", batteryVoltage);
   display.setCursor(0, 56); // Нижняя строка
@@ -92,4 +100,3 @@ void updateStatusScreen(bool gpsHasTime, double gpsTime, bool isLogging, unsigne
 
   display.display();
 }
-

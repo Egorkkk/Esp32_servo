@@ -1,184 +1,122 @@
 #include <Arduino.h>
-#include <SPI.h>
-#include "imu.h"
-#include "sdcard.h"
-#include "gps.h"
-#include "logger.h"
-#include "buttons.h"
-#include "display.h"
-#include "battery.h"
-#include "led.h"
+#include "driver/twai.h"
 
-#define SPI_MOSI 11
-#define SPI_MISO 13
-#define SPI_SCK  12
+// Пины энкодера
+#define ENC_A 35
+#define ENC_B 36
 
-SPIClass sharedSPI(HSPI);
+// Пины драйвера BTS7960
+#define RPWM 9
+#define LPWM 10
+#define REN  11
+#define LEN  8
 
-#define SD_MOSI 35
-#define SD_MISO 37
-#define SD_SCK  36
-#define SD_CS   39
+// ШИМ-каналы
+#define PWM_CH_RPWM 0
+#define PWM_CH_LPWM 1
 
-SPIClass sdSPI(FSPI);  // Новая шина для SD-карты
+// Глобальные переменные
+volatile int encoderCount = 0;
+int lastEncoderCount = 0;
+int pwmValue = 0;
+static uint8_t lastSeqID_100 = 0xFF;
+static uint8_t lastSeqID_101 = 0xFF;
+static uint8_t lastSeqID_102 = 0xFF;
+static uint32_t lost_100 = 0, lost_101 = 0, lost_102 = 0;
+static unsigned long lastPrint = 0;
 
-unsigned long lastFlush = 0;
+void IRAM_ATTR handleEncoder() {
+  bool A = digitalRead(ENC_A);
+  bool B = digitalRead(ENC_B);
+  if (A == B) {
+    encoderCount++;
+  } else {
+    encoderCount--;
+  }
+}
+
+void setMotorPWM(int value) {
+  value = constrain(value, -255, 255);
+  pwmValue = value;
+  ledcWrite(PWM_CH_RPWM, 0);
+  ledcWrite(PWM_CH_LPWM, 0);
+  delayMicroseconds(100);
+
+  if (value > 0) {
+    ledcWrite(PWM_CH_RPWM, value);
+  } else if (value < 0) {
+    ledcWrite(PWM_CH_LPWM, -value);
+  }
+}
 
 void setup() {
   Serial.begin(115200);
-  delay(100);
-  Serial.println("[MAIN] Boot...");
 
-  setupDisplay();        // 🟢 Обязательно первым, чтобы дисплей был готов
-  showMessage("Boot..."); // Пишем на экран
+  pinMode(ENC_A, INPUT);
+  pinMode(ENC_B, INPUT);
+  attachInterrupt(digitalPinToInterrupt(ENC_A), handleEncoder, CHANGE);
 
-  setupLED();
+  pinMode(RPWM, OUTPUT);
+  pinMode(LPWM, OUTPUT);
+  pinMode(REN, OUTPUT);
+  pinMode(LEN, OUTPUT);
+  digitalWrite(REN, HIGH);
+  digitalWrite(LEN, HIGH);
 
-  sharedSPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
+  ledcSetup(PWM_CH_RPWM, 20000, 8);
+  ledcSetup(PWM_CH_LPWM, 20000, 8);
+  ledcAttachPin(RPWM, PWM_CH_RPWM);
+  ledcAttachPin(LPWM, PWM_CH_LPWM);
 
-  sdSPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
-  Serial.printf("SD pins: CLK=%d MISO=%d MOSI=%d CS=%d\n", SD_SCK, SD_MISO, SD_MOSI, SD_CS);
+  twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)15, (gpio_num_t)18, TWAI_MODE_NORMAL);
+  g_config.rx_queue_len = 20;
+  twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS();
+  twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
-  bool sdOk = initSDCard(sdSPI);
-  showInitStatus("SD Card", sdOk);
-  if (!sdOk) {
-    Serial.println("[MAIN] ❌ SD init failed.");
-    //while (1);
+  if (twai_driver_install(&g_config, &t_config, &f_config) != ESP_OK) {
+    Serial.println("[CAN] ❌ Ошибка установки драйвера");
+  } else if (twai_start() != ESP_OK) {
+    Serial.println("[CAN] ❌ Ошибка запуска CAN");
+  } else {
+    Serial.println("[CAN] ✅ CAN-шина инициализирована");
   }
-
-  bool imuOk = initIMU(sharedSPI);
-  showInitStatus("IMU", imuOk);
-  if (!imuOk) {
-    Serial.println("[MAIN] ❌ IMU init failed.");
-    while (1);
-  }
-
-  bool gpsOk = initGPS();
-  showInitStatus("GPS", gpsOk);
-  if (!gpsOk) {
-    Serial.println("[MAIN] ❌ GPS init failed.");
-  }
-
-  setupButtons();
-  showInitStatus("Buttons", true);
-
-  setupBatteryMonitor();  
-
-  Serial.println("[MAIN] ✅ System initialized.");
-  showInitStatus("System", true);
 }
 
 void loop() {
-  static unsigned long lastSample = 0;
-  static unsigned long lastFlush = 0;
-  static unsigned long lastDisplayUpdate = 0;
-  static unsigned long logStartMillis = 0;
-  static int imuFailCount = 0;
+  twai_message_t message;
+  int currentCount = encoderCount;
+  int delta = currentCount - lastEncoderCount;
+  lastEncoderCount = currentCount;
+  int pwm = delta * 20;
+  if (abs(pwm) < 5) pwm = 0;
+  pwm = constrain(pwm, -255, 255);
+  setMotorPWM(pwm);
 
-  handleButtons();
-  handleGPS();
+  while (twai_receive(&message, 0) == ESP_OK) {
+    uint8_t seqID = message.data[0];
+    uint32_t id = message.identifier;
 
-  // Обработка команд от кнопок
-  if (shouldStartLogging()) {
-    if (startLogger(sdSPI)) {
-      logStartMillis = millis(); // начинаем отсчёт времени записи
+    uint8_t* lastSeq = nullptr;
+    if (id == 0x100) lastSeq = &lastSeqID_100;
+    else if (id == 0x101) lastSeq = &lastSeqID_101;
+    else if (id == 0x102) lastSeq = &lastSeqID_102;
+
+    if (lastSeq) {
+      if (*lastSeq != 0xFF && (uint8_t)(seqID - *lastSeq) != 1) {
+        uint8_t lost = (uint8_t)(seqID - *lastSeq) - 1;
+        if (id == 0x100) lost_100 += lost;
+        else if (id == 0x101) lost_101 += lost;
+        else if (id == 0x102) lost_102 += lost;
+      }
+      *lastSeq = seqID;
     }
   }
 
-  if (shouldStopLogging()) {
-    stopLogger();
+  if (millis() - lastPrint > 1000) {
+    Serial.printf("[CAN] Lost frames/s → 0x100: %lu, 0x101: %lu, 0x102: %lu\n", lost_100, lost_101, lost_102);
+    lost_100 = lost_101 = lost_102 = 0;
+    lastPrint = millis();
   }
 
-  // 👉 Обновление дисплея и светодиода раз в секунду
-  if (millis() - lastDisplayUpdate >= 1000) {
-    lastDisplayUpdate = millis();
-
-    bool gpsHasTime = gps.date.isValid() &&
-                      gps.time.isValid() &&
-                      (gps.time.hour() > 0 || gps.time.minute() > 0 || gps.time.second() > 0);
-
-    double gpsTime = 0.0;
-    if (gpsHasTime) {
-      gpsTime = gps.time.hour() * 3600 + gps.time.minute() * 60 + gps.time.second();
-    }
-
-    unsigned long logDurationSec = 0;
-    if (isLogging()) {
-      logDurationSec = (millis() - logStartMillis) / 1000;
-    }
-
-    float voltage = getBatteryVoltage();
-
-    // 👉 Обновление экрана
-    updateStatusScreen(gpsHasTime, gpsTime, isLogging(), logDurationSec, voltage);
-
-    // 👉 Обновление состояния светодиода
-    static bool initFailed = false;  // или сделай флаг глобальным, если у тебя он есть
-    if (!initFailed) {
-      // Можно, например, выставлять флаг `initFailed = true;` в setup(), если что-то пошло не так
-    }
-
-    const float LOW_BATTERY_THRESHOLD = 3.3;  // например
-
-    if (initFailed) {
-      updateLEDState(LEDState::INIT_ERROR);
-    } else if (voltage < LOW_BATTERY_THRESHOLD) {
-      updateLEDState(LEDState::LOW_BATTERY);
-    } else if (isLogging()) {
-      updateLEDState(LEDState::RECORDING);
-    } else if (gpsHasTime) {
-      updateLEDState(LEDState::GPS_OK);
-    } else {
-      updateLEDState(LEDState::OK_IDLE);
-    }
-
-    tickLED();  // вызываем светодиодный эффект
-  }
-
-  // 👉 Логирование данных только если логгер активен
-  if (isLogging() && millis() - lastSample >= 10) {
-    lastSample = millis();
-
-    IMUData sample;
-
-    if (!readIMU(sample)) {
-      Serial.println("[IMU] No new IMU data");
-
-    const int IMU_FAIL_THRESHOLD = 50;
-    if (imuFailCount >= IMU_FAIL_THRESHOLD) {
-      Serial.println("[IMU] ⚠ Too many failures, resetting IMU...");
-      resetIMU(sharedSPI);  // 🔁 перезапуск
-      imuFailCount = 0;
-    }
-
-      return;
-    }
-
-    // Время по GPS или fallback
-    if (!getGPSTimestamp(sample.timestamp)) {
-      sample.timestamp = millis() / 1000.0;
-    }
-
-    if (gps.location.isValid()) {
-      sample.latitude = gps.location.lat();
-      sample.longitude = gps.location.lng();
-    }
-
-    if (gps.altitude.isValid()) {
-      sample.altitude = gps.altitude.meters();
-    }
-
-    Serial.printf("[IMU] t=%.3f  q=(%.2f, %.2f, %.2f, %.2f)  g=(%.2f, %.2f, %.2f)  a=(%.2f, %.2f, %.2f)\n",
-                  sample.timestamp,
-                  sample.qw, sample.qx, sample.qy, sample.qz,
-                  sample.gyroX, sample.gyroY, sample.gyroZ,
-                  sample.accelX, sample.accelY, sample.accelZ);
-
-    logIMUData(sample);
-  }
-
-  if (isLogging() && millis() - lastFlush >= 1000) {
-    lastFlush = millis();
-    flushLogger();
-  }
+  delay(20);
 }

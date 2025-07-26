@@ -4,10 +4,11 @@
 
 enum class LEDState {
   INIT_ERROR,
-  OK_IDLE,
-  GPS_OK,
+  LOW_BATTERY,
   RECORDING,
-  LOW_BATTERY
+  GPS_OK,
+  GPS_LOST,
+  OK_IDLE
 };
 
 void setupLED();

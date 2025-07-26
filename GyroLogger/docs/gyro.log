@@ -1,0 +1,528 @@
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 90 FE C8 D9 F6
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 90 FE C8 D9 DB
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE EF D9 F6
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE EF D9 F6
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 90 FE C8 D9 F6
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE C8 D9 D7
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE A1 D9 FA
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7E DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE EF D9 F6
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE C8 D9 FA
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 90 FE C8 D9 F6
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x101: got 00 after 00
+[CAN] ID: 0x101 DLC: 6 Seq: 00 Data: 00 00 00 00 00
+[CAN] ⚠ LOST frame(s) on 0x102: got 00 after 00
+[CAN] ID: 0x102 DLC: 6 Seq: 00 Data: 69 FE C8 D9 D7
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90
+[CAN] ⚠ LOST frame(s) on 0x100: got 00 after 00
+[CAN] ID: 0x100 DLC: 8 Seq: 00 Data: 7F DB 86 0D F3 FF 90

@@ -73,5 +73,13 @@ void tickLED() {
         setLEDColor(0, ledOn ? 255 : 0, 0);  // мигаем зелёным
       }
       break;
+
+      case LEDState::GPS_LOST:
+      if (now - lastUpdate >= 500) {
+        lastUpdate = now;
+        ledOn = !ledOn;
+        setLEDColor(0, 0, ledOn ? 255 : 0);  // мигаем синим
+      }
+      break;
   }
 }
