@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../controller"
+		},
+		{
+			"name": "GyroLogger",
+			"path": "."
+		},
+		{
+			"name": "BDC Drive",
+			"path": "../BDC Drive"
+		}
+	],
+	"settings": {}
+}
