@@ -3,7 +3,7 @@
 #ifndef _BMP180_H_
 #define _BMP180_H_
 
-#define BMP180_ADDR 0x77
+constexpr uint8_t BMP180_ADDR = 0x77;
 
 // Регистры BMP180
 #define BMP180_CAL_AC1 0xAA  // Калибровочные данные

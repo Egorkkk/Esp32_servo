@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #undef min
 #undef max
-#include <servo.h>
+#include <Servo.h>
 
 Preferences prefs;
 std::vector<ServoConfig> motors;

@@ -3,7 +3,7 @@
 #pragma once
 
 #include <vector>
-#include <servo.h>
+#include <Servo.h>
 #include <Preferences.h>
 
 // Определения пинов (можно вынести в pins.h позже)

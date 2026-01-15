@@ -12,7 +12,11 @@ int16_t bmp180ReadInt(uint8_t address) {
   Wire.beginTransmission(BMP180_ADDR);
   Wire.write(address);
   Wire.endTransmission(false);
-  Wire.requestFrom(BMP180_ADDR, 2, true);
+  Wire.requestFrom(
+    static_cast<uint8_t>(BMP180_ADDR),
+    static_cast<size_t>(2),
+    static_cast<bool>(true)
+  ); //Wire.requestFrom(BMP180_ADDR, 2, true);
   return (Wire.read() << 8) | Wire.read();
 }
 
@@ -49,7 +53,11 @@ float bmp180GetTemperature() {
   Wire.beginTransmission(BMP180_ADDR);
   Wire.write(BMP180_DATA);
   Wire.endTransmission(false);
-  Wire.requestFrom(BMP180_ADDR, 2, true);
+    Wire.requestFrom(
+    static_cast<uint8_t>(BMP180_ADDR),
+    static_cast<size_t>(2),
+    static_cast<bool>(true)
+  ); //Wire.requestFrom(BMP180_ADDR, 2, true);
   int32_t ut = (Wire.read() << 8) | Wire.read();
 
   // Вычисление температуры
@@ -72,7 +80,11 @@ float bmp180GetPressure() {
   Wire.beginTransmission(BMP180_ADDR);
   Wire.write(BMP180_DATA);
   Wire.endTransmission(false);
-  Wire.requestFrom(BMP180_ADDR, 3, true);
+    Wire.requestFrom(
+    static_cast<uint8_t>(BMP180_ADDR),
+    static_cast<size_t>(3),
+    static_cast<bool>(true)
+  ); //Wire.requestFrom(BMP180_ADDR, 2, true);
   int32_t up = ((Wire.read() << 16) | (Wire.read() << 8) | Wire.read()) >> (8 - 3);
 
   // Вычисление давления

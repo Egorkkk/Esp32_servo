@@ -36,7 +36,7 @@ void setupServer() {
     String id = request->getParam("id")->value();
     for (auto &m : motors) {
       if (m.id == id) {
-        DynamicJsonDocument doc(256);
+        JsonDocument doc;
         doc["angle"] = m.angle;
         doc["min"] = m.minAngle;
         doc["max"] = m.maxAngle;
